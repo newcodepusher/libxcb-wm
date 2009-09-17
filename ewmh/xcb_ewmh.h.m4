@@ -55,10 +55,19 @@
 extern "C" {
 #endif
 
-/** All the Atoms XIDs */
-define(`DO', `ifelse(`$1', , , `extern xcb_atom_t $1;
-DO(shift($@))')')dnl
+/**
+ * @brief Hold EWMH
+ */
+typedef struct {
+  /** The X connection */
+  xcb_connection_t *connection;
+  /** The root window of this connection */
+  xcb_window_t root;
+  /** The EWMH atoms of this connection */dnl
+define(`DO', `ifelse(`$1', , , `
+  xcb_atom_t $1;DO(shift($@))')')dnl
 include(atomlist.m4)dnl
+} xcb_ewmh_connection_t;
 
 /**
  * @brief Hold a GetProperty reply containing a list of Atoms
@@ -333,19 +342,24 @@ typedef struct {
 /**
  * @brief Send InternAtom requests for the EWMH atoms and its required atoms.
  * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param screen_nbr The screen number.
+ * @return The cookies corresponding to EWMH atoms.
  */
-void xcb_ewmh_init_atoms_list(xcb_connection_t *c,
-			      const int screen_nbr);
+xcb_intern_atom_cookie_t *xcb_ewmh_init_atoms(xcb_connection_t *c,
+					      xcb_ewmh_connection_t * const ewmh,
+					      const int screen_nbr);
 
 /**
  * @brief Process the replies previously sent
- * @param c The connection to the X server.
+ * @param emwh The information relative to EWMH.
+ * @param ewmh_cookies The cookies corresponding to EWMH atoms.
  * @param e Error if any.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_init_atoms_list_replies(xcb_connection_t *c,
-				         xcb_generic_error_t **e);
+uint8_t xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
+				    xcb_intern_atom_cookie_t *ewmh_cookies,
+				    xcb_generic_error_t **e);
 
 /**
  * @brief Wipe the Atoms list reply.
@@ -383,20 +397,20 @@ void xcb_ewmh_get_windows_reply_wipe(xcb_ewmh_get_windows_reply_t *data);
  * This form can be used only if  the request will cause a reply to be
  * generated. Any returned error will be placed in the event queue.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_SUPPORTED cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_supported_unchecked(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_supported_unchecked(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Send  GetProperty request to get  _NET_SUPPORTED root window
  *        property
  *
  * @see xcb_ewmh_get_supported_unchecked
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_SUPPORTED cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_supported(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_supported(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Get reply from the GetProperty _NET_SUPPORTED cookie
@@ -405,13 +419,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_supported(xcb_connection_t *c);
  * xcb_get_window_supported_unchecked() is used.  Otherwise, it stores
  * the error if any.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param cookie The _NET_SUPPORTED GetProperty request cookie.
  * @param supported The reply to be filled.
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_supported_reply(xcb_connection_t *c,
+uint8_t xcb_ewmh_get_supported_reply(xcb_ewmh_connection_t *ewmh,
 				     xcb_get_property_cookie_t cookie,
 				     xcb_ewmh_get_atoms_reply_t *supported,
 				     xcb_generic_error_t **e);
@@ -425,20 +439,20 @@ uint8_t xcb_ewmh_get_supported_reply(xcb_connection_t *c,
  * the oldest window.  This property SHOULD be set  and updated by the
  * Window Manager.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_CLIENT_LIST cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_client_list_unchecked(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_client_list_unchecked(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Send GetProperty request to get _NET_CLIENT_LIST root window
  *        property
  *
  * @see xcb_ewmh_get_client_list_unchecked
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_CLIENT_LIST cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_client_list(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_client_list(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Get reply from the GetProperty _NET_CLIENT_LIST cookie
@@ -447,13 +461,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_client_list(xcb_connection_t *c);
  * xcb_get_window_client_list_unchecked()  is   used.   Otherwise,  it
  * stores the error if any.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param cookie The _NET_CLIENT_LIST GetProperty request cookie.
  * @param clients The list of clients to be filled.
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_client_list_reply(xcb_connection_t *c,
+uint8_t xcb_ewmh_get_client_list_reply(xcb_ewmh_connection_t *ewmh,
 				       xcb_get_property_cookie_t cookie,
 				       xcb_ewmh_get_windows_reply_t *clients,
 				       xcb_generic_error_t **e);
@@ -470,20 +484,20 @@ uint8_t xcb_ewmh_get_client_list_reply(xcb_connection_t *c,
  * This form can be used only if  the request will cause a reply to be
  * generated. Any returned error will be placed in the event queue.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_ACTIVE_WINDOW cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_active_window_unchecked(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_active_window_unchecked(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief  Send  GetProperty request  to  get _NET_ACTIVE_WINDOW  root
  *        window property
  *
  * @see xcb_ewmh_get_active_window_unchecked
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_ACTIVE_WINDOW cookie of the GetProperty request.
  */
-xcb_get_property_cookie_t xcb_ewmh_get_active_window(xcb_connection_t *c);
+xcb_get_property_cookie_t xcb_ewmh_get_active_window(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Get reply from the GetProperty _NET_ACTIVE_WINDOW cookie
@@ -492,13 +506,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_active_window(xcb_connection_t *c);
  * xcb_get_active_window_unchecked()  is used.   Otherwise,  it stores
  * the error if any.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param cookie The _NET_ACTIVE_WINDOW GetProperty request cookie.
  * @param active_window The reply to be filled.
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_active_window_reply(xcb_connection_t *c,
+uint8_t xcb_ewmh_get_active_window_reply(xcb_ewmh_connection_t *ewmh,
 					 xcb_get_property_cookie_t cookie,
 					 xcb_window_t *active_window,
 					 xcb_generic_error_t **e);
@@ -517,13 +531,13 @@ uint8_t xcb_ewmh_get_active_window_reply(xcb_connection_t *c,
  * active window to another).
  *
  * @see xcb_ewmh_client_source_type_t
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param window_to_active The window ID to activate.
  * @param source_indication The source indication.
  * @param timestamp The client's last user activity timestamp.
  * @param current_active_window The currently active window or None
  */
-void xcb_ewmh_request_change_active_window(xcb_connection_t *c,
+void xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
 					   xcb_window_t window_to_activate,
 					   xcb_ewmh_client_source_type_t source_indication,
 					   xcb_timestamp_t timestamp,
@@ -533,20 +547,20 @@ void xcb_ewmh_request_change_active_window(xcb_connection_t *c,
  * @brief   Send  GetSelectOwner   request   to  get   the  owner   of
  *        _NET_WM_CM_Sn root window property
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_WM_CM_Sn cookie of the GetSelectionOwner request.
  */
-xcb_get_selection_owner_cookie_t xcb_ewmh_get_wm_cm_owner_unchecked(xcb_connection_t *c);
+xcb_get_selection_owner_cookie_t xcb_ewmh_get_wm_cm_owner_unchecked(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief   Send  GetSelectOwner   request   to  get   the  owner   of
  *        _NET_WM_CM_Sn root window property
  *
  * @see xcb_ewmh_get_wm_cm_owner_unchecked
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @return The _NET_WM_CM_Sn cookie of the GetSelectionOwner request.
  */
-xcb_get_selection_owner_cookie_t xcb_ewmh_get_wm_cm_owner(xcb_connection_t *c);
+xcb_get_selection_owner_cookie_t xcb_ewmh_get_wm_cm_owner(xcb_ewmh_connection_t *ewmh);
 
 /**
  * @brief Get reply from the GetProperty _NET_CLIENT_LIST cookie
@@ -555,13 +569,13 @@ xcb_get_selection_owner_cookie_t xcb_ewmh_get_wm_cm_owner(xcb_connection_t *c);
  * xcb_get_window_client_list_unchecked()  is   used.   Otherwise,  it
  * stores the error if any.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param cookie The _NET_WM_CM_Sn GetSelectionOwner request cookie.
  * @param owner The window ID which owns the selection or None.
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_wm_cm_owner_reply(xcb_connection_t *c,
+uint8_t xcb_ewmh_get_wm_cm_owner_reply(xcb_ewmh_connection_t *ewmh,
 				       xcb_get_selection_owner_cookie_t cookie,
 				       xcb_window_t *owner,
 				       xcb_generic_error_t **e);
@@ -573,13 +587,13 @@ uint8_t xcb_ewmh_get_wm_cm_owner_reply(xcb_connection_t *c,
  * ownership of a selection named _NET_WM_CM_Sn, where n is the screen
  * number.
  *
- * @param c The connection to the X server.
+ * @param ewmh The information relative to EWMH.
  * @param owner The new owner of _NET_WM_CM_Sn selection.
  * @param timestamp The client's last user activity timestamp.
  * @param selection_data1 Optional data described by ICCCM
  * @param selection_data2 Optional data described by ICCCM
  */
-void xcb_ewmh_set_wm_cm_owner(xcb_connection_t *c,
+void xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
 			      xcb_window_t owner,
 			      xcb_timestamp_t timestamp,
 			      uint32_t selection_data1,
