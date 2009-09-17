@@ -82,12 +82,16 @@ XCB_ATOM_CFLAGS='-I$(top_srcdir)/atom -I$(top_builddir)/atom'
 XCB_ATOM_LIBS='$(top_builddir)/atom/libxcb-atom.la'
 XCB_ICCCM_CFLAGS='-I$(top_srcdir)/icccm'
 XCB_ICCCM_LIBS='$(top_builddir)/icccm/libxcb-icccm.la'
+XCB_EWMH_CFLAGS='-I$(top_srcdir)/ewmh'
+XCB_EWMH_LIBS='$(top_builddir)/ewmh/libxcb-ewmh.la'
 AC_SUBST(XCB_AUX_CFLAGS)
 AC_SUBST(XCB_AUX_LIBS)
 AC_SUBST(XCB_ATOM_CFLAGS)
 AC_SUBST(XCB_ATOM_LIBS)
 AC_SUBST(XCB_ICCCM_CFLAGS)
 AC_SUBST(XCB_ICCCM_LIBS)
+AC_SUBST(XCB_EWMH_CFLAGS)
+AC_SUBST(XCB_EWMH_LIBS)
 
 AC_OUTPUT([Makefile
 	aux/Makefile aux/xcb-aux.pc
@@ -96,6 +100,7 @@ AC_OUTPUT([Makefile
 	event/Makefile event/xcb-event.pc
 	keysyms/Makefile keysyms/xcb-keysyms.pc
 	icccm/Makefile icccm/xcb-icccm.pc
-	wm/Makefile wm/xcb-wm.pc
+	ewmh/Makefile ewmh/xcb-ewmh.pc
+	renderutil/Makefile renderutil/xcb-renderutil.pc
 	xcb_util_intro
 	])

@@ -486,6 +486,7 @@ WARN_LOGFILE           =
 INPUT                  = xcb_util_intro \
                          event/ \
                          icccm/ \
+                         ewmh/ \
                          image/ \
                          property/ \
                          reply/
