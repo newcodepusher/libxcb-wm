@@ -537,11 +537,11 @@ uint8_t xcb_ewmh_get_active_window_reply(xcb_ewmh_connection_t *ewmh,
  * @param timestamp The client's last user activity timestamp.
  * @param current_active_window The currently active window or None
  */
-void xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
-					   xcb_window_t window_to_activate,
-					   xcb_ewmh_client_source_type_t source_indication,
-					   xcb_timestamp_t timestamp,
-					   xcb_window_t current_active_window);
+xcb_void_cookie_t xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
+							xcb_window_t window_to_activate,
+							xcb_ewmh_client_source_type_t source_indication,
+							xcb_timestamp_t timestamp,
+							xcb_window_t current_active_window);
 
 /**
  * @brief   Send  GetSelectOwner   request   to  get   the  owner   of
@@ -593,11 +593,11 @@ uint8_t xcb_ewmh_get_wm_cm_owner_reply(xcb_ewmh_connection_t *ewmh,
  * @param selection_data1 Optional data described by ICCCM
  * @param selection_data2 Optional data described by ICCCM
  */
-void xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
-			      xcb_window_t owner,
-			      xcb_timestamp_t timestamp,
-			      uint32_t selection_data1,
-			      uint32_t selection_data2);
+xcb_void_cookie_t xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
+					   xcb_window_t owner,
+					   xcb_timestamp_t timestamp,
+					   uint32_t selection_data1,
+					   uint32_t selection_data2);
 
 #ifdef __cplusplus
 }

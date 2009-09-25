@@ -121,43 +121,46 @@ xcb_ewmh_get_##name##_unchecked(xcb_ewmh_connection_t *ewmh,		\
  * Macro defining function for set_property and get_property functions
  */
 #define DO_SET_SINGLE_VALUE_PROPERTY(atom, name, name_type, request_type) \
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
                                 xcb_window_t window,			\
 				name_type value)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-				window, ewmh->atom, request_type, 32, 1, \
-				&value);				\
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE,		\
+				       window, ewmh->atom,		\
+				       request_type, 32, 1,		\
+				       &value);				\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      xcb_window_t window,				\
 		      name_type value)					\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
-			window, ewmh->atom, request_type, 32, 1,	\
-			&value);					\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
+			       window, ewmh->atom, request_type, 32, 1,	\
+			       &value);					\
   }
 
 #define DO_SET_ROOT_SINGLE_VALUE_PROPERTY(atom, name, name_type, request_type) \
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
 				name_type value)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-				ewmh->root, ewmh->atom,	request_type,	\
-				32, 1, &value);				\
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE,		\
+				       ewmh->root, ewmh->atom,		\
+				       request_type, 32, 1, &value);	\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      name_type value)					\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
-			ewmh->root, ewmh->atom, request_type, 32,	\
-			1, &value);					\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
+			       ewmh->root, ewmh->atom, request_type,	\
+			       32, 1, &value);				\
   }
 
 /**
@@ -232,50 +235,56 @@ DO_REPLY_SINGLE_VALUE_ATOM(cardinal, uint32_t, CARDINAL)
  */
 
 #define DO_SET_LIST_VALUES_PROPERTY(atom, name, name_type, request_type, len_shift) \
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
 				xcb_window_t window,			\
 				uint32_t list_len,			\
 				name_type *list)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window, \
-				ewmh->atom, request_type, 32,		\
-				GET_LEN_FROM_NB(list_len, len_shift), list); \
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE, window,	\
+				       ewmh->atom, request_type, 32,	\
+				       GET_LEN_FROM_NB(list_len,	\
+						       len_shift),	\
+				       list);				\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      xcb_window_t window,				\
 		      uint32_t list_len,				\
 		      name_type *list)					\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window, ewmh->atom, \
-			request_type, 32,				\
-			GET_LEN_FROM_NB(list_len, len_shift),		\
-			list);						\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
+			       window, ewmh->atom, request_type, 32,	\
+			       GET_LEN_FROM_NB(list_len, len_shift),	\
+			       list);					\
   }
 
 #define DO_SET_ROOT_LIST_VALUES_PROPERTY(atom, name, name_type, request_type, len_shift) \
-  void									\
+  xcb_void_cookie_t									\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
 				uint32_t list_len,			\
 				name_type *list)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root, \
-				ewmh->atom, request_type, 32,		\
-				GET_LEN_FROM_NB(list_len, len_shift),	\
-				list);					\
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE,		\
+				       ewmh->root, ewmh->atom,		\
+				       request_type, 32,		\
+				       GET_LEN_FROM_NB(list_len,	\
+						       len_shift),	\
+				       list);				\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      uint32_t list_len,				\
 		      name_type *list)					\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root, \
-			ewmh->atom, request_type, 32,			\
-			GET_LEN_FROM_NB(list_len, len_shift),		\
-			list);						\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
+			       ewmh->root, ewmh->atom, request_type,	\
+			       32, GET_LEN_FROM_NB(list_len, len_shift), \
+			       list);					\
   }
 
 /**
@@ -391,56 +400,61 @@ xcb_ewmh_get_utf8_strings_reply_wipe(xcb_ewmh_get_utf8_strings_reply_t *data)
   DO_GET_ROOT_PROPERTY(atom, name, 0, UINT_MAX)				\
   DO_ACCESSORS_COMMON_UTF8_STRING(atom, name)				\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      uint32_t strings_len,				\
 		      const char *strings)				\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
-			ewmh->root, ewmh->atom,				\
-			ewmh->UTF8_STRING, 8, strings_len, strings);	\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,	\
+			       ewmh->root, ewmh->atom,			\
+			       ewmh->UTF8_STRING, 8, strings_len,	\
+			       strings);				\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
 				uint32_t strings_len,			\
 				const char *strings)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-				ewmh->root, ewmh->atom,			\
-				ewmh->UTF8_STRING, 8, strings_len, strings); \
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE,		\
+				       ewmh->root, ewmh->atom,		\
+				       ewmh->UTF8_STRING, 8,		\
+				       strings_len, strings);		\
   }
 
 #define DO_ACCESSORS_UTF8_STRING(atom, name)				\
   DO_GET_PROPERTY(atom, name, 0, UINT_MAX)				\
   DO_ACCESSORS_COMMON_UTF8_STRING(atom, name)				\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name(xcb_ewmh_connection_t *ewmh,			\
 		      xcb_window_t window,				\
 		      uint32_t strings_len,				\
 		      const char *strings)				\
   {									\
-    xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window, \
-			ewmh->atom, ewmh->UTF8_STRING, 8, strings_len,	\
-			strings);					\
+    return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
+			       window, ewmh->atom, ewmh->UTF8_STRING,	\
+			       8, strings_len, strings);		\
   }									\
 									\
-  void									\
+  xcb_void_cookie_t							\
   xcb_ewmh_set_##name##_checked(xcb_ewmh_connection_t *ewmh,		\
 				xcb_window_t window,			\
 				uint32_t strings_len,			\
 				const char *strings)			\
   {									\
-    xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-				window, ewmh->atom, ewmh->UTF8_STRING,	\
-				8, strings_len, strings);		\
+    return xcb_change_property_checked(ewmh->connection,		\
+				       XCB_PROP_MODE_REPLACE,		\
+				       window, ewmh->atom,		\
+				       ewmh->UTF8_STRING, 8,		\
+				       strings_len, strings);		\
   }
 
 /**
  * ClientMessage generic function
  */
-void
+xcb_void_cookie_t
 send_client_message(xcb_connection_t *c,
 		    xcb_window_t window,
 		    xcb_window_t dest,
@@ -459,8 +473,8 @@ send_client_message(xcb_connection_t *c,
   for(; data_len != 0; data_len--)
     ev.data.data32[0] = data[1];
 
-  xcb_send_event(c, 0, dest, ROOT_WINDOW_MESSAGE_EVENT_MASK,
-		 (char *) &ev);
+  return xcb_send_event(c, 0, dest, ROOT_WINDOW_MESSAGE_EVENT_MASK,
+			(char *) &ev);
 }
 
 /**
@@ -587,13 +601,13 @@ xcb_ewmh_get_client_list_reply(xcb_ewmh_connection_t *ewmh,
 DO_ACCESSORS_ROOT_SINGLE_VALUE_ATOM(_NET_NUMBER_OF_DESKTOPS, number_of_desktops,
 				    CARDINAL, uint32_t, cardinal)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_number_of_desktops(xcb_ewmh_connection_t *ewmh,
 					   uint32_t new_number_of_desktops)
 {
-  send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-		      ewmh->_NET_NUMBER_OF_DESKTOPS, 1,
-		      &new_number_of_desktops);
+  return send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+			     ewmh->_NET_NUMBER_OF_DESKTOPS, 1,
+			     &new_number_of_desktops);
 }
 
 /**
@@ -602,31 +616,35 @@ xcb_ewmh_request_change_number_of_desktops(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_ROOT_PROPERTY(_NET_DESKTOP_GEOMETRY, desktop_geometry, CARDINAL, 2L)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
 			      uint32_t new_width, uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-		      ewmh->_NET_DESKTOP_GEOMETRY, CARDINAL, 32, 2, data);
+
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
+			     ewmh->_NET_DESKTOP_GEOMETRY, CARDINAL, 32, 2, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_desktop_geometry_checked(xcb_ewmh_connection_t *ewmh,
 				      uint32_t new_width, uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-			      ewmh->_NET_DESKTOP_GEOMETRY, CARDINAL, 32, 2, data);
+
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     ewmh->root, ewmh->_NET_DESKTOP_GEOMETRY,
+				     CARDINAL, 32, 2, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_geometry(xcb_ewmh_connection_t *ewmh,
 					 uint32_t new_width, uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
-  send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-		      ewmh->_NET_DESKTOP_GEOMETRY, 2, data);
+
+  return send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+			     ewmh->_NET_DESKTOP_GEOMETRY, 2, data);
 }
 
 uint8_t
@@ -665,13 +683,14 @@ DO_GET_ROOT_PROPERTY(_NET_DESKTOP_VIEWPORT, desktop_viewport, CARDINAL, UINT_MAX
 DO_SET_ROOT_LIST_VALUES_PROPERTY(_NET_DESKTOP_VIEWPORT, desktop_viewport,
 				 xcb_ewmh_coordinates_t, CARDINAL, 1)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
 					 uint32_t x, uint32_t y)
 {
   const uint32_t data[] = { x, y };
-  send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-		      ewmh->_NET_DESKTOP_VIEWPORT, 2, data);
+
+  return send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+			     ewmh->_NET_DESKTOP_VIEWPORT, 2, data);
 }
 
 DO_REPLY_LIST_VALUES_ATOM(extern, desktop_viewport, xcb_ewmh_coordinates_t, CARDINAL, 1)
@@ -683,14 +702,15 @@ DO_REPLY_LIST_VALUES_ATOM(extern, desktop_viewport, xcb_ewmh_coordinates_t, CARD
 DO_ACCESSORS_ROOT_SINGLE_VALUE_ATOM(_NET_CURRENT_DESKTOP, current_desktop,
 				    CARDINAL, uint32_t, cardinal)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
 					uint32_t new_desktop,
 					xcb_timestamp_t timestamp)
 {
   const uint32_t data[] = { new_desktop, timestamp };
-  send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-		      ewmh->_NET_CURRENT_DESKTOP, 2, data);
+
+  return send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+			     ewmh->_NET_CURRENT_DESKTOP, 2, data);
 }
 
 /**
@@ -705,7 +725,7 @@ DO_ACCESSORS_ROOT_UTF8_STRING(_NET_DESKTOP_NAMES, desktop_names)
 DO_ACCESSORS_ROOT_SINGLE_VALUE_ATOM(_NET_ACTIVE_WINDOW, active_window,
 				    WINDOW, xcb_window_t, window)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
 				      xcb_window_t window_to_activate,
 				      xcb_ewmh_client_source_type_t source_indication,
@@ -713,8 +733,9 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
 				      xcb_window_t current_active_window)
 {
   const uint32_t data[] = { source_indication, timestamp, current_active_window };
-  send_client_message(ewmh->connection, window_to_activate, ewmh->root,
-		      ewmh->_NET_ACTIVE_WINDOW, 3, data);
+
+  return send_client_message(ewmh->connection, window_to_activate, ewmh->root,
+			     ewmh->_NET_ACTIVE_WINDOW, 3, data);
 }
 
 /**
@@ -761,26 +782,29 @@ xcb_ewmh_get_virtual_roots_reply(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_ROOT_PROPERTY(_NET_DESKTOP_LAYOUT, desktop_layout, CARDINAL, 4)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_desktop_layout(xcb_ewmh_connection_t *ewmh,
 			    xcb_ewmh_desktop_layout_orientation_t orientation,
 			    uint32_t columns, uint32_t rows,
 			    xcb_ewmh_desktop_layout_starting_corner_t starting_corner)
 {
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-		      ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32, 2, data);
+
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
+			     ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32, 2, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
 				    xcb_ewmh_desktop_layout_orientation_t orientation,
 				    uint32_t columns, uint32_t rows,
 				    xcb_ewmh_desktop_layout_starting_corner_t starting_corner)
 {
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-			      ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32, 2, data);
+
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     ewmh->root, ewmh->_NET_DESKTOP_LAYOUT,
+				     CARDINAL, 32, 2, data);
 }
 
 uint8_t
@@ -816,27 +840,28 @@ xcb_ewmh_get_desktop_layout_reply(xcb_ewmh_connection_t *ewmh,
 DO_ACCESSORS_ROOT_SINGLE_VALUE_ATOM(_NET_SHOWING_DESKTOP, showing_desktop, CARDINAL,
 				    uint32_t, cardinal)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_showing_desktop(xcb_ewmh_connection_t *ewmh,
 					uint32_t enter)
 {
-  send_client_message(ewmh->connection, XCB_NONE, ewmh->root, ewmh->_NET_SHOWING_DESKTOP, 1,
-		      &enter);
+  return send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+			     ewmh->_NET_SHOWING_DESKTOP, 1, &enter);
 }
 
 /**
  * _NET_CLOSE_WINDOW
  */
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
 			      xcb_window_t window_to_close,
 			      xcb_timestamp_t timestamp,
 			      xcb_ewmh_client_source_type_t source_indication)
 {
   const uint32_t data[] = { timestamp, source_indication };
-  send_client_message(ewmh->connection, window_to_close, ewmh->root, ewmh->_NET_CLOSE_WINDOW,
-		      2, data);
+
+  return send_client_message(ewmh->connection, window_to_close, ewmh->root,
+			     ewmh->_NET_CLOSE_WINDOW, 2, data);
 }
 
 /**
@@ -844,7 +869,7 @@ xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
  */
 
 /* x, y, width, height may be equal to -1 */
-void
+xcb_void_cookie_t
 xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
 				   xcb_window_t moveresize_window,
 				   xcb_gravity_t gravity,
@@ -856,15 +881,15 @@ xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { (gravity | flags | GET_LEN_FROM_NB(source_indication, 12)),
 			    x, y, width, height };
 
-  send_client_message(ewmh->connection, moveresize_window, ewmh->root,
-		      ewmh->_NET_MOVERESIZE_WINDOW, 5, data);
+  return send_client_message(ewmh->connection, moveresize_window, ewmh->root,
+			     ewmh->_NET_MOVERESIZE_WINDOW, 5, data);
 }
 
 /**
  * _NET_WM_MOVERESIZE
  */
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
 			       xcb_window_t moveresize_window,
 			       uint32_t x_root, uint32_t y_root,
@@ -874,15 +899,15 @@ xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { x_root, y_root, direction, button, source_indication };
 
-  send_client_message(ewmh->connection, moveresize_window, ewmh->root, ewmh->_NET_WM_MOVERESIZE, 5,
-		      data);
+  return send_client_message(ewmh->connection, moveresize_window, ewmh->root,
+			     ewmh->_NET_WM_MOVERESIZE, 5, data);
 }
 
 /**
  * _NET_RESTACK_WINDOW
  */
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
 				xcb_window_t window_to_restack,
 				xcb_window_t sibling_window,
@@ -891,16 +916,16 @@ xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { XCB_EWMH_CLIENT_SOURCE_TYPE_OTHER, sibling_window,
 			    detail };
 
-  send_client_message(ewmh->connection, window_to_restack, ewmh->root,
-		      ewmh->_NET_RESTACK_WINDOW, 3, data);
+  return send_client_message(ewmh->connection, window_to_restack, ewmh->root,
+			     ewmh->_NET_RESTACK_WINDOW, 3, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_frame_extents(xcb_ewmh_connection_t *ewmh,
 			       xcb_window_t client_window)
 {
-  send_client_message(ewmh->connection, client_window, ewmh->root,
-		      ewmh->_NET_REQUEST_FRAME_EXTENTS, 0, NULL);
+  return send_client_message(ewmh->connection, client_window, ewmh->root,
+			     ewmh->_NET_REQUEST_FRAME_EXTENTS, 0, NULL);
 }
 
 /**
@@ -933,7 +958,7 @@ DO_ACCESSORS_UTF8_STRING(_NET_WM_VISIBLE_ICON_NAME, wm_visible_icon_name)
 
 DO_ACCESSORS_SINGLE_VALUE_ATOM(_NET_WM_DESKTOP, wm_desktop, CARDINAL, uint32_t, cardinal)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
 				   xcb_window_t client_window,
 				   uint32_t new_desktop,
@@ -941,8 +966,8 @@ xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { new_desktop, source_indication };
 
-  send_client_message(ewmh->connection, client_window, ewmh->root,
-		      ewmh->_NET_WM_DESKTOP, 2, data);
+  return send_client_message(ewmh->connection, client_window, ewmh->root,
+			     ewmh->_NET_WM_DESKTOP, 2, data);
 }
 
 /**
@@ -979,7 +1004,7 @@ xcb_ewmh_get_wm_window_type_reply(xcb_ewmh_connection_t *ewmh,
 DO_GET_PROPERTY(_NET_WM_STATE, wm_state, ATOM, UINT_MAX)
 DO_SET_LIST_VALUES_PROPERTY(_NET_WM_STATE, wm_state, xcb_atom_t, ATOM, 0)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
 				 xcb_window_t client_window,
 				 xcb_ewmh_wm_state_action_t action,
@@ -989,8 +1014,8 @@ xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { action, first_property, second_property, source_indication };
 
-  send_client_message(ewmh->connection, client_window, ewmh->root,
-		      ewmh->_NET_WM_STATE, 4, data);
+  return send_client_message(ewmh->connection, client_window, ewmh->root,
+			     ewmh->_NET_WM_STATE, 4, data);
 }
 
 uint8_t
@@ -1041,22 +1066,23 @@ xcb_ewmh_get_wm_allowed_actions_reply(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_PROPERTY(_NET_WM_STRUT, wm_strut, CARDINAL, 12)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_strut_checked(xcb_ewmh_connection_t *ewmh,
 			      xcb_window_t window,
 			      xcb_ewmh_wm_strut_t wm_strut)
 {
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_WM_STRUT, CARDINAL, 32, 12, &wm_strut);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_WM_STRUT, CARDINAL, 32,
+				     12, &wm_strut);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_strut(xcb_ewmh_connection_t *ewmh,
 		      xcb_window_t window,
 		      xcb_ewmh_wm_strut_t wm_strut)
 {
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_WM_STRUT, CARDINAL, 32, 12, &wm_strut);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_WM_STRUT, CARDINAL, 32, 12, &wm_strut);
 }
 
 uint8_t
@@ -1093,7 +1119,7 @@ xcb_ewmh_get_wm_strut_reply(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_PROPERTY(_NET_WM_ICON_GEOMETRY, wm_icon_geometry, CARDINAL, 4)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_icon_geometry_checked(xcb_ewmh_connection_t *ewmh,
 				      xcb_window_t window,
 				      uint32_t left, uint32_t right,
@@ -1101,11 +1127,12 @@ xcb_ewmh_set_wm_icon_geometry_checked(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { left, right, top, bottom };
 
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32, 4, data);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_WM_ICON_GEOMETRY,
+				     CARDINAL, 32, 4, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_icon_geometry(xcb_ewmh_connection_t *ewmh,
 			      xcb_window_t window,
 			      uint32_t left, uint32_t right,
@@ -1113,8 +1140,8 @@ xcb_ewmh_set_wm_icon_geometry(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { left, right, top, bottom };
 
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32, 4, data);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32, 4, data);
 }
 
 uint8_t
@@ -1159,7 +1186,7 @@ set_wm_icon_data(uint32_t data[], uint32_t width, uint32_t height,
   memcpy(data + 2, img, img_len);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
 			     xcb_window_t window,
 			     uint32_t width, uint32_t height,
@@ -1170,11 +1197,12 @@ xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
 
   set_wm_icon_data(data, width, height, img_len, img);
 
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_WM_ICON, CARDINAL, 32, data_len, data);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_WM_ICON, CARDINAL, 32,
+				     data_len, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
 		     xcb_window_t window,
 		     uint32_t width, uint32_t height,
@@ -1185,8 +1213,8 @@ xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
 
   set_wm_icon_data(data, width, height, img_len, img);
 
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_WM_ICON, CARDINAL, 32, data_len, data);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_WM_ICON, CARDINAL, 32, data_len, data);
 }
 
 uint8_t
@@ -1254,7 +1282,7 @@ DO_ACCESSORS_SINGLE_VALUE_ATOM(_NET_WM_USER_TIME_WINDOW, wm_user_time_window,
 
 DO_GET_PROPERTY(_NET_FRAME_EXTENTS, frame_extents, CARDINAL, 4)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_frame_extents(xcb_ewmh_connection_t *ewmh,
 			   xcb_window_t window,
 			   uint32_t left, uint32_t right,
@@ -1262,11 +1290,11 @@ xcb_ewmh_set_frame_extents(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { left, right, top, bottom };
 
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32, 4, data);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32, 4, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
 				   xcb_window_t window,
 				   uint32_t left, uint32_t right,
@@ -1274,8 +1302,9 @@ xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { left, right, top, bottom };
 
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32, 4, data);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_FRAME_EXTENTS, CARDINAL,
+				     32, 4, data);
 }
 
 uint8_t
@@ -1310,14 +1339,15 @@ xcb_ewmh_get_frame_extents_reply(xcb_ewmh_connection_t *ewmh,
  * TODO: client resend function?
  */
 
-void
+xcb_void_cookie_t
 xcb_ewmh_send_wm_ping(xcb_ewmh_connection_t *ewmh,
 		      xcb_window_t window,
 		      xcb_timestamp_t timestamp)
 {
   const uint32_t data[] = { ewmh->_NET_WM_PING, timestamp, window };
 
-  send_client_message(ewmh->connection, window, window, ewmh->WM_PROTOCOLS, 3, data);
+  return send_client_message(ewmh->connection, window, window,
+			     ewmh->WM_PROTOCOLS, 3, data);
 }
 
 /**
@@ -1327,7 +1357,7 @@ xcb_ewmh_send_wm_ping(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_PROPERTY(_NET_WM_SYNC_REQUEST, wm_sync_request_counter, CARDINAL, 2)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_sync_request_counter(xcb_ewmh_connection_t *ewmh,
 				     xcb_window_t window,
 				     xcb_atom_t wm_sync_request_counter_atom,
@@ -1335,11 +1365,11 @@ xcb_ewmh_set_wm_sync_request_counter(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { low, high };
 
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32, 2, data);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32, 2, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
 					     xcb_window_t window,
 					     xcb_atom_t wm_sync_request_counter_atom,
@@ -1347,11 +1377,12 @@ xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { low, high };
 
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32, 2, data);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_WM_SYNC_REQUEST,
+				     CARDINAL, 32, 2, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_send_wm_sync_request(xcb_ewmh_connection_t *ewmh,
 			      xcb_window_t window,
 			      xcb_atom_t wm_protocols_atom,
@@ -1362,7 +1393,8 @@ xcb_ewmh_send_wm_sync_request(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { ewmh->_NET_WM_SYNC_REQUEST, timestamp, counter,
 			    GET_NB_FROM_LEN(counter, 32) };
 
-  send_client_message(ewmh->connection, window, window, ewmh->WM_PROTOCOLS, 4, data);
+  return send_client_message(ewmh->connection, window, window,
+			     ewmh->WM_PROTOCOLS, 4, data);
 }
 
 uint8_t
@@ -1398,7 +1430,7 @@ xcb_ewmh_get_wm_sync_request_counter_reply(xcb_ewmh_connection_t *ewmh,
 
 DO_GET_PROPERTY(_NET_WM_FULLSCREEN_MONITORS, wm_fullscreen_monitors, CARDINAL, 4)
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 				    xcb_window_t window,
 				    uint32_t top, uint32_t bottom,
@@ -1406,11 +1438,11 @@ xcb_ewmh_set_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { top, bottom, left, right };
 
-  xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-		      ewmh->_NET_WM_FULLSCREEN_MONITORS, CARDINAL, 32, 4, data);
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+			     ewmh->_NET_WM_FULLSCREEN_MONITORS, CARDINAL, 32, 4, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_fullscreen_monitors_checked(xcb_ewmh_connection_t *ewmh,
 					    xcb_window_t window,
 					    uint32_t top, uint32_t bottom,
@@ -1418,12 +1450,12 @@ xcb_ewmh_set_wm_fullscreen_monitors_checked(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { top, bottom, left, right };
 
-  xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-			      ewmh->_NET_WM_FULLSCREEN_MONITORS, CARDINAL, 32, 4,
-			      data);
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+				     window, ewmh->_NET_WM_FULLSCREEN_MONITORS,
+				     CARDINAL, 32, 4, data);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 					       xcb_window_t window,
 					       uint32_t top, uint32_t bottom,
@@ -1432,8 +1464,8 @@ xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { top, bottom, left, right, source_indication };
 
-  send_client_message(ewmh->connection, window, ewmh->root,
-		      ewmh->_NET_WM_FULLSCREEN_MONITORS, 5, data);
+  return send_client_message(ewmh->connection, window, ewmh->root,
+			     ewmh->_NET_WM_FULLSCREEN_MONITORS, 5, data);
 }
 
 uint8_t
@@ -1507,7 +1539,7 @@ xcb_ewmh_get_wm_cm_owner_reply(xcb_ewmh_connection_t *ewmh,
 }
 
 /* TODO: section 2.1, 2.2 */
-static void
+static xcb_void_cookie_t
 set_wm_cm_owner_client_message(xcb_ewmh_connection_t *ewmh,
 			       xcb_window_t owner,
 			       xcb_timestamp_t timestamp,
@@ -1526,11 +1558,13 @@ set_wm_cm_owner_client_message(xcb_ewmh_connection_t *ewmh,
   ev.data.data32[3] = selection_data1;
   ev.data.data32[4] = selection_data2;
 
-  xcb_send_event(ewmh->connection, 0, ewmh->root, XCB_EVENT_MASK_STRUCTURE_NOTIFY,
-		 (char *) &ev);
+  return xcb_send_event(ewmh->connection, 0, ewmh->root,
+			XCB_EVENT_MASK_STRUCTURE_NOTIFY,
+			(char *) &ev);
 }
 
-void
+/* TODO: check both */
+xcb_void_cookie_t
 xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
 			 xcb_window_t owner,
 			 xcb_timestamp_t timestamp,
@@ -1538,11 +1572,12 @@ xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
 			 uint32_t selection_data2)
 {
   xcb_set_selection_owner(ewmh->connection, owner, ewmh->_NET_WM_CM_Sn, 0);
-  set_wm_cm_owner_client_message(ewmh, owner, timestamp,
-				 selection_data1, selection_data2);
+
+  return set_wm_cm_owner_client_message(ewmh, owner, timestamp,
+					selection_data1, selection_data2);
 }
 
-void
+xcb_void_cookie_t
 xcb_ewmh_set_wm_cm_owner_checked(xcb_ewmh_connection_t *ewmh,
 				 xcb_window_t owner,
 				 xcb_timestamp_t timestamp,
@@ -1550,6 +1585,7 @@ xcb_ewmh_set_wm_cm_owner_checked(xcb_ewmh_connection_t *ewmh,
 				 uint32_t selection_data2)
 {
   xcb_set_selection_owner_checked(ewmh->connection, owner, ewmh->_NET_WM_CM_Sn, 0);
-  set_wm_cm_owner_client_message(ewmh, owner, timestamp,
-				 selection_data1, selection_data2);
+
+  return set_wm_cm_owner_client_message(ewmh, owner, timestamp,
+					selection_data1, selection_data2);
 }
