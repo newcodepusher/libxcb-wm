@@ -43,9 +43,6 @@
  * directly and has  to be wipe afterwards. This  structure provides a
  * convenient access to the list given in the reply itself.
  *
- * \todo Add  missing prototypes but  asks for advices on  XCB mailing
- *       list before.
- *
  * @{
  */
 
@@ -56,7 +53,7 @@ extern "C" {
 #endif
 
 /**
- * @brief Hold EWMH
+ * @brief Hold EWMH information specific to a screen
  */
 typedef struct {
   /** The X connection */
@@ -106,7 +103,7 @@ typedef struct {
 } xcb_ewmh_get_utf8_strings_reply_t;
 
 /**
- * @brief Property values as coordinates
+ * @brief Coordinates Property values
  */
 typedef struct {
   /** The x coordinate */
@@ -128,7 +125,7 @@ typedef struct {
 } xcb_ewmh_get_desktop_viewport_reply_t;
 
 /**
- * @brief Property values as a geometry
+ * @brief Geometry Property values
  */
 typedef struct {
   /** The x coordinate */
@@ -340,6 +337,42 @@ typedef struct {
 } xcb_ewmh_get_wm_fullscreen_monitors_reply_t;
 
 /**
+ * @brief Send a ClientMessage request
+ *
+ * This  function is  called  by all  the xcb_ewmh_request*  functions
+ * whose should be used instead of calling directly this function
+ *
+ * @param c The X connection
+ * @param window
+ * @param dest Destination Window XID
+ * @param atom
+ * @param data_len The length of data
+ * @param data
+ */
+xcb_void_cookie_t xcb_ewmh_send_client_message(xcb_connection_t *c,
+					       xcb_window_t window,
+					       xcb_window_t dest,
+					       xcb_atom_t atom,
+					       uint32_t data_len,
+					       const uint32_t *data);
+
+uint8_t xcb_ewmh_get_atoms_from_reply(xcb_ewmh_get_atoms_reply_t *atoms,
+				      xcb_get_property_reply_t *r);
+
+uint8_t xcb_ewmh_get_atoms_reply(xcb_ewmh_connection_t *ewmh,
+				 xcb_get_property_cookie_t cookie,
+				 xcb_ewmh_get_atoms_reply_t *atoms,
+				 xcb_generic_error_t **e);
+
+uint8_t xcb_ewmh_get_windows_from_reply(xcb_ewmh_get_windows_reply_t *atoms,
+					xcb_get_property_reply_t *r);
+
+uint8_t xcb_ewmh_get_windows_reply(xcb_ewmh_connection_t *ewmh,
+				   xcb_get_property_cookie_t cookie,
+				   xcb_ewmh_get_windows_reply_t *atoms,
+				   xcb_generic_error_t **e);
+
+/**
  * @brief Send InternAtom requests for the EWMH atoms and its required atoms.
  * @param c The connection to the X server.
  * @param ewmh The information relative to EWMH.
@@ -412,6 +445,12 @@ xcb_get_property_cookie_t xcb_ewmh_get_supported_unchecked(xcb_ewmh_connection_t
  */
 xcb_get_property_cookie_t xcb_ewmh_get_supported(xcb_ewmh_connection_t *ewmh);
 
+static inline uint8_t xcb_ewmh_get_supported_from_reply(xcb_ewmh_get_atoms_reply_t *supported,
+							xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_atoms_from_reply(supported, r);
+}
+
 /**
  * @brief Get reply from the GetProperty _NET_SUPPORTED cookie
  *
@@ -425,10 +464,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_supported(xcb_ewmh_connection_t *ewmh);
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_supported_reply(xcb_ewmh_connection_t *ewmh,
-				     xcb_get_property_cookie_t cookie,
-				     xcb_ewmh_get_atoms_reply_t *supported,
-				     xcb_generic_error_t **e);
+static inline uint8_t xcb_ewmh_get_supported_reply(xcb_ewmh_connection_t *ewmh,
+						   xcb_get_property_cookie_t cookie,
+						   xcb_ewmh_get_atoms_reply_t *supported,
+						   xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_atoms_reply(ewmh, cookie, supported, e);
+}
 
 /**
  * @brief Send GetProperty request to get _NET_CLIENT_LIST root window
@@ -454,6 +496,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_client_list_unchecked(xcb_ewmh_connection
  */
 xcb_get_property_cookie_t xcb_ewmh_get_client_list(xcb_ewmh_connection_t *ewmh);
 
+static inline uint8_t
+xcb_ewmh_get_client_list_from_reply(xcb_ewmh_get_windows_reply_t *clients,
+                                    xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_windows_from_reply(clients, r);
+}
+
 /**
  * @brief Get reply from the GetProperty _NET_CLIENT_LIST cookie
  *
@@ -467,10 +516,29 @@ xcb_get_property_cookie_t xcb_ewmh_get_client_list(xcb_ewmh_connection_t *ewmh);
  * @param The xcb_generic_error_t supplied.
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_ewmh_get_client_list_reply(xcb_ewmh_connection_t *ewmh,
-				       xcb_get_property_cookie_t cookie,
-				       xcb_ewmh_get_windows_reply_t *clients,
-				       xcb_generic_error_t **e);
+static inline uint8_t xcb_ewmh_get_client_list_reply(xcb_ewmh_connection_t *ewmh,
+						     xcb_get_property_cookie_t cookie,
+						     xcb_ewmh_get_windows_reply_t *clients,
+						     xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_windows_reply(ewmh, cookie, clients, e);
+}
+
+static inline uint8_t
+xcb_ewmh_get_client_list_stacking_from_reply(xcb_ewmh_get_windows_reply_t *clients,
+					     xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_windows_from_reply(clients, r);
+}
+
+static inline uint8_t
+xcb_ewmh_get_client_list_stacking_reply(xcb_ewmh_connection_t *ewmh,
+					xcb_get_property_cookie_t cookie,
+					xcb_ewmh_get_windows_reply_t *clients,
+					xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_windows_reply(ewmh, cookie, clients, e);
+}
 
 /**
  * @brief  Send  GetProperty request  to  get _NET_ACTIVE_WINDOW  root
@@ -598,6 +666,48 @@ xcb_void_cookie_t xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
 					   xcb_timestamp_t timestamp,
 					   uint32_t selection_data1,
 					   uint32_t selection_data2);
+
+static inline uint8_t
+xcb_ewmh_get_virtual_roots_from_reply(xcb_ewmh_get_windows_reply_t *virtual_roots,
+                                     xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_windows_from_reply(virtual_roots, r);
+}
+
+static inline uint8_t
+xcb_ewmh_get_virtual_roots_reply(xcb_ewmh_connection_t *ewmh,
+                                xcb_get_property_cookie_t cookie,
+                                xcb_ewmh_get_windows_reply_t *virtual_roots,
+                                xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_windows_reply(ewmh, cookie, virtual_roots, e);
+}
+
+
+static inline xcb_void_cookie_t
+xcb_ewmh_request_change_showing_desktop(xcb_ewmh_connection_t *ewmh,
+					uint32_t enter)
+{
+  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+				      ewmh->_NET_SHOWING_DESKTOP, 1, &enter);
+}
+
+static inline xcb_void_cookie_t
+xcb_ewmh_request_change_number_of_desktops(xcb_ewmh_connection_t *ewmh,
+                                           uint32_t new_number_of_desktops)
+{
+  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+				      ewmh->_NET_NUMBER_OF_DESKTOPS, 1,
+				      &new_number_of_desktops);
+}
+
+static inline xcb_void_cookie_t
+xcb_ewmh_request_frame_extents(xcb_ewmh_connection_t *ewmh,
+                               xcb_window_t client_window)
+{
+  return xcb_ewmh_send_client_message(ewmh->connection, client_window, ewmh->root,
+				      ewmh->_NET_REQUEST_FRAME_EXTENTS, 0, NULL);
+}
 
 #ifdef __cplusplus
 }
