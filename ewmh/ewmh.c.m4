@@ -534,8 +534,11 @@ xcb_ewmh_send_client_message(xcb_connection_t *c,
   ev.format = 32;
   ev.type = atom;
 
-  for(; data_len != 0; data_len--)
-    ev.data.data32[0] = data[1];
+  while(data_len)
+    {
+      data_len--;
+      ev.data.data32[data_len] = data[data_len];
+    }
 
   return xcb_send_event(c, 0, dest, XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
                         XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,
