@@ -209,8 +209,8 @@ DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
   DO_GET_SINGLE_VALUE(atom, name, reply_type, out_type,                 \
                       func_reply)
 
-#define DO_ROOT_SINGLE_VALUE_ATOM(atom, name, reply_type,               \
-                                  out_type, func_reply)                 \
+#define DO_ROOT_SINGLE_VALUE(atom, name, reply_type,                    \
+                             out_type, func_reply)                      \
   DO_GET_ROOT_PROPERTY(atom, name, reply_type, 1L)                      \
                                                                         \
   xcb_void_cookie_t                                                     \
@@ -631,8 +631,8 @@ DO_ROOT_LIST_VALUES(_NET_CLIENT_LIST_STACKING, client_list_stacking, WINDOW,
  * _NET_NUMBER_OF_DESKTOPS
  */
 
-DO_ROOT_SINGLE_VALUE_ATOM(_NET_NUMBER_OF_DESKTOPS, number_of_desktops,
-                          CARDINAL, uint32_t, cardinal)
+DO_ROOT_SINGLE_VALUE(_NET_NUMBER_OF_DESKTOPS, number_of_desktops,
+                     CARDINAL, uint32_t, cardinal)
 
 /**
  * _NET_DESKTOP_GEOMETRY
@@ -722,8 +722,8 @@ xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
  * _NET_CURRENT_DESKTOP
  */
 
-DO_ROOT_SINGLE_VALUE_ATOM(_NET_CURRENT_DESKTOP, current_desktop,
-                          CARDINAL, uint32_t, cardinal)
+DO_ROOT_SINGLE_VALUE(_NET_CURRENT_DESKTOP, current_desktop,
+                     CARDINAL, uint32_t, cardinal)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
@@ -745,8 +745,8 @@ DO_ROOT_UTF8_STRING(_NET_DESKTOP_NAMES, desktop_names)
  * _NET_ACTIVE_WINDOW
  */
 
-DO_ROOT_SINGLE_VALUE_ATOM(_NET_ACTIVE_WINDOW, active_window,
-                          WINDOW, xcb_window_t, window)
+DO_ROOT_SINGLE_VALUE(_NET_ACTIVE_WINDOW, active_window,
+                     WINDOW, xcb_window_t, window)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
@@ -773,8 +773,8 @@ DO_REPLY_LIST_VALUES_ATOM(workarea, xcb_ewmh_geometry_t, CARDINAL, 2)
  * _NET_SUPPORTING_WM_CHECK
  */
 
-DO_ROOT_SINGLE_VALUE_ATOM(_NET_SUPPORTING_WM_CHECK, supporting_wm_check,
-                          WINDOW, xcb_window_t, window)
+DO_ROOT_SINGLE_VALUE(_NET_SUPPORTING_WM_CHECK, supporting_wm_check,
+                     WINDOW, xcb_window_t, window)
 
 /**
  * _NET_VIRTUAL_ROOTS
@@ -818,8 +818,8 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
  * _NET_SHOWING_DESKTOP
  */
 
-DO_ROOT_SINGLE_VALUE_ATOM(_NET_SHOWING_DESKTOP, showing_desktop, CARDINAL,
-                          uint32_t, cardinal)
+DO_ROOT_SINGLE_VALUE(_NET_SHOWING_DESKTOP, showing_desktop, CARDINAL,
+                     uint32_t, cardinal)
 
 /**
  * _NET_CLOSE_WINDOW
