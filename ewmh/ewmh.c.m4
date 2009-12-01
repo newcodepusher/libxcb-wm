@@ -256,7 +256,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
  * component  (such as  coordinates), and  divide by  (r->format  / 8)
  * where r->format always equals to 32 in this case.
  */
-#define DO_REPLY_LIST_VALUES_ATOM(name, name_type, reply_type, len_shift) \
+#define DO_REPLY_LIST_VALUES_ATOM(name, name_type, reply_type)		\
   uint8_t                                                               \
   xcb_ewmh_get_##name##_from_reply(xcb_ewmh_get_##name##_reply_t *data, \
                                    xcb_get_property_reply_t *r)         \
@@ -265,9 +265,8 @@ DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
       return 0;                                                         \
                                                                         \
     data->_reply = r;                                                   \
-    data->name##_len =                                                  \
-      GET_NB_FROM_LEN(xcb_get_property_value_length(data->_reply),      \
-                      len_shift + 2);                                   \
+    data->name##_len = xcb_get_property_value_length(data->_reply) /	\
+      sizeof(name_type);						\
                                                                         \
     data->name = (name_type *) xcb_get_property_value(data->_reply);    \
     return 1;                                                           \
@@ -545,8 +544,8 @@ xcb_ewmh_send_client_message(xcb_connection_t *c,
                         (char *) &ev);
 }
 
-DO_REPLY_LIST_VALUES_ATOM(windows, xcb_window_t, WINDOW, 0)
-DO_REPLY_LIST_VALUES_ATOM(atoms, xcb_atom_t, ATOM, 0)
+DO_REPLY_LIST_VALUES_ATOM(windows, xcb_window_t, WINDOW)
+DO_REPLY_LIST_VALUES_ATOM(atoms, xcb_atom_t, ATOM)
 
 /**
  * Atoms initialisation
@@ -709,7 +708,7 @@ xcb_ewmh_get_desktop_geometry_reply(xcb_ewmh_connection_t *ewmh,
 DO_ROOT_LIST_VALUES(_NET_DESKTOP_VIEWPORT, desktop_viewport, CARDINAL,
                     ewmh_coordinates, 1)
 
-DO_REPLY_LIST_VALUES_ATOM(desktop_viewport, xcb_ewmh_coordinates_t, CARDINAL, 1)
+DO_REPLY_LIST_VALUES_ATOM(desktop_viewport, xcb_ewmh_coordinates_t, CARDINAL)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
@@ -770,7 +769,7 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
  */
 
 DO_ROOT_LIST_VALUES(_NET_WORKAREA, workarea, CARDINAL, ewmh_geometry, 2)
-DO_REPLY_LIST_VALUES_ATOM(workarea, xcb_ewmh_geometry_t, CARDINAL, 2)
+DO_REPLY_LIST_VALUES_ATOM(workarea, xcb_ewmh_geometry_t, CARDINAL)
 
 /**
  * _NET_SUPPORTING_WM_CHECK
