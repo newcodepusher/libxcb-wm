@@ -606,7 +606,7 @@ xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
 ')dnl
     include(atomlist.m4)dnl
 
-    free(ewmh_cookies);
+  free(ewmh_cookies);
   return 1;
 
  init_atoms_replies_error:
