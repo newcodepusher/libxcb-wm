@@ -128,9 +128,9 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
  * WINDOW and CARDINAL)
  */
 #define DO_REPLY_SINGLE_VALUE(name, name_type, reply_type)              \
-  static uint8_t                                                        \
-  get_single_##name##_from_reply(name_type *atom_value,                 \
-                                 xcb_get_property_reply_t *r)           \
+  uint8_t								\
+  xcb_ewmh_get_##name##_from_reply(name_type *atom_value,		\
+				   xcb_get_property_reply_t *r)		\
   {                                                                     \
     if(!r || r->type != reply_type || r->format != 32 ||                \
        xcb_get_property_value_length(r) != 4)                           \
@@ -140,17 +140,17 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
     return 1;                                                           \
   }                                                                     \
                                                                         \
-  static uint8_t                                                        \
-  get_single_##name##_reply(xcb_ewmh_connection_t *ewmh,                \
-                            xcb_get_property_cookie_t cookie,           \
-                            name_type *atom_value,                      \
-                            xcb_generic_error_t **e)                    \
+  uint8_t								\
+  xcb_ewmh_get_##name##_reply(xcb_ewmh_connection_t *ewmh,		\
+			      xcb_get_property_cookie_t cookie,		\
+			      name_type *atom_value,			\
+			      xcb_generic_error_t **e)			\
   {                                                                     \
     xcb_get_property_reply_t *r =                                       \
       xcb_get_property_reply(ewmh->connection,                          \
                              cookie, e);                                \
                                                                         \
-    const uint8_t ret = get_single_##name##_from_reply(atom_value, r);  \
+    const uint8_t ret = xcb_ewmh_get_##name##_from_reply(atom_value, r); \
                                                                         \
     free(r);                                                            \
     return ret;                                                         \
@@ -161,24 +161,6 @@ DO_REPLY_SINGLE_VALUE(window, xcb_window_t, WINDOW)
 
 /** Define reply functions for common CARDINAL Atom */
 DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
-
-#define DO_GET_SINGLE_VALUE(atom, name, reply_type,                     \
-                            out_type, func_reply)                       \
-  uint8_t                                                               \
-  xcb_ewmh_get_##name##_from_reply(out_type *out,                       \
-                                   xcb_get_property_reply_t *r)         \
-  {                                                                     \
-    return get_single_##func_reply##_from_reply(out, r);                \
-  }                                                                     \
-                                                                        \
-  uint8_t                                                               \
-  xcb_ewmh_get_##name##_reply(xcb_ewmh_connection_t *ewmh,              \
-                              xcb_get_property_cookie_t cookie,         \
-                              out_type *out,                            \
-                              xcb_generic_error_t **e)                  \
-  {                                                                     \
-    return get_single_##func_reply##_reply(ewmh, cookie, out, e);       \
-  }
 
 #define DO_SINGLE_VALUE(atom, name, reply_type,                         \
                         out_type, func_reply)                           \
@@ -204,10 +186,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
     return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
                                window, ewmh->atom, reply_type, 32, 1,   \
                                &value);                                 \
-  }                                                                     \
-                                                                        \
-  DO_GET_SINGLE_VALUE(atom, name, reply_type, out_type,                 \
-                      func_reply)
+  }
 
 #define DO_ROOT_SINGLE_VALUE(atom, name, reply_type,                    \
                              out_type, func_reply)                      \
@@ -230,10 +209,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, uint32_t, CARDINAL)
     return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
                                ewmh->root, ewmh->atom, reply_type,      \
                                32, 1, &value);                          \
-  }                                                                     \
-                                                                        \
-  DO_GET_SINGLE_VALUE(atom, name, reply_type, out_type,                 \
-                      func_reply)
+  }
 
 /**
  * Generic function for EWMH atoms with  a list of values which may be
