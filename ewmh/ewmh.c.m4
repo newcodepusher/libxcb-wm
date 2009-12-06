@@ -646,7 +646,8 @@ xcb_ewmh_request_change_desktop_geometry(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { new_width, new_height };
 
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-                                      ewmh->_NET_DESKTOP_GEOMETRY, 2, data);
+                                      ewmh->_NET_DESKTOP_GEOMETRY,
+                                      countof(data), data);
 }
 
 uint8_t
@@ -693,7 +694,8 @@ xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { x, y };
 
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-                                      ewmh->_NET_DESKTOP_VIEWPORT, 2, data);
+                                      ewmh->_NET_DESKTOP_VIEWPORT,
+                                      countof(data), data);
 }
 
 /**
@@ -711,7 +713,8 @@ xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { new_desktop, timestamp };
 
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-                                      ewmh->_NET_CURRENT_DESKTOP, 2, data);
+                                      ewmh->_NET_CURRENT_DESKTOP,
+                                      countof(data), data);
 }
 
 /**
@@ -737,7 +740,7 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
 
   return xcb_ewmh_send_client_message(ewmh->connection, window_to_activate,
                                       ewmh->root, ewmh->_NET_ACTIVE_WINDOW,
-                                      3, data);
+                                      countof(data), data);
 }
 
 /**
@@ -811,8 +814,9 @@ xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { timestamp, source_indication };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, window_to_close, ewmh->root,
-                                      ewmh->_NET_CLOSE_WINDOW, 2, data);
+  return xcb_ewmh_send_client_message(ewmh->connection, window_to_close,
+                                      ewmh->root, ewmh->_NET_CLOSE_WINDOW,
+                                      countof(data), data);
 }
 
 /**
@@ -835,7 +839,7 @@ xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
 
   return xcb_ewmh_send_client_message(ewmh->connection, moveresize_window,
                                       ewmh->root, ewmh->_NET_MOVERESIZE_WINDOW,
-                                      5, data);
+                                      countof(data), data);
 }
 
 /**
@@ -854,7 +858,7 @@ xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
 
   return xcb_ewmh_send_client_message(ewmh->connection, moveresize_window,
                                       ewmh->root, ewmh->_NET_WM_MOVERESIZE,
-                                      5, data);
+                                      countof(data), data);
 }
 
 /**
@@ -872,7 +876,7 @@ xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
 
   return xcb_ewmh_send_client_message(ewmh->connection, window_to_restack,
                                       ewmh->root, ewmh->_NET_RESTACK_WINDOW,
-                                      3, data);
+                                      countof(data), data);
 }
 
 /**
@@ -913,8 +917,9 @@ xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { new_desktop, source_indication };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, client_window, ewmh->root,
-                                      ewmh->_NET_WM_DESKTOP, 2, data);
+  return xcb_ewmh_send_client_message(ewmh->connection, client_window,
+                                      ewmh->root, ewmh->_NET_WM_DESKTOP,
+                                      countof(data), data);
 }
 
 /**
@@ -945,7 +950,7 @@ xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
                             source_indication };
 
   return xcb_ewmh_send_client_message(ewmh->connection, client_window, ewmh->root,
-                                      ewmh->_NET_WM_STATE, 4, data);
+                                      ewmh->_NET_WM_STATE, countof(data), data);
 }
 
 /**
@@ -1167,7 +1172,7 @@ xcb_ewmh_send_wm_ping(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { ewmh->_NET_WM_PING, timestamp, window };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window, window,
-                                      ewmh->WM_PROTOCOLS, 3, data);
+                                      ewmh->WM_PROTOCOLS, countof(data), data);
 }
 
 /**
@@ -1241,7 +1246,7 @@ xcb_ewmh_send_wm_sync_request(xcb_ewmh_connection_t *ewmh,
                             GET_NB_FROM_LEN(counter, 32) };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window, window,
-                                      ewmh->WM_PROTOCOLS, 4, data);
+                                      ewmh->WM_PROTOCOLS, countof(data), data);
 }
 
 /**
@@ -1289,7 +1294,8 @@ xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { top, bottom, left, right, source_indication };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window, ewmh->root,
-                                      ewmh->_NET_WM_FULLSCREEN_MONITORS, 5, data);
+                                      ewmh->_NET_WM_FULLSCREEN_MONITORS,
+                                      countof(data), data);
 }
 
 /**
