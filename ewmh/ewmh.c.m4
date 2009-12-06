@@ -224,7 +224,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, CARDINAL, uint32_t)
  * Macro defining  a generic function  for reply containing a  list of
  * values and also defines a function to wipe the reply.
  */
-#define DO_REPLY_LIST_VALUES_ATOM(fname, atype, ctype)                  \
+#define DO_REPLY_LIST_VALUES(fname, atype, ctype)			\
   uint8_t                                                               \
   xcb_ewmh_get_##fname##_from_reply(xcb_ewmh_get_##fname##_reply_t *data, \
                                     xcb_get_property_reply_t *r)        \
@@ -512,8 +512,8 @@ xcb_ewmh_send_client_message(xcb_connection_t *c,
                         (char *) &ev);
 }
 
-DO_REPLY_LIST_VALUES_ATOM(windows, WINDOW, xcb_window_t)
-DO_REPLY_LIST_VALUES_ATOM(atoms, ATOM, xcb_atom_t)
+DO_REPLY_LIST_VALUES(windows, WINDOW, xcb_window_t)
+DO_REPLY_LIST_VALUES(atoms, ATOM, xcb_atom_t)
 
 /**
  * Atoms initialisation
@@ -677,7 +677,7 @@ xcb_ewmh_get_desktop_geometry_reply(xcb_ewmh_connection_t *ewmh,
 DO_ROOT_LIST_VALUES(desktop_viewport, _NET_DESKTOP_VIEWPORT, CARDINAL,
                     xcb_ewmh_coordinates_t)
 
-DO_REPLY_LIST_VALUES_ATOM(desktop_viewport, CARDINAL, xcb_ewmh_coordinates_t)
+DO_REPLY_LIST_VALUES(desktop_viewport, CARDINAL, xcb_ewmh_coordinates_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
@@ -738,7 +738,7 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
  */
 
 DO_ROOT_LIST_VALUES(workarea, _NET_WORKAREA, CARDINAL, xcb_ewmh_geometry_t)
-DO_REPLY_LIST_VALUES_ATOM(workarea, CARDINAL, xcb_ewmh_geometry_t)
+DO_REPLY_LIST_VALUES(workarea, CARDINAL, xcb_ewmh_geometry_t)
 
 /**
  * _NET_SUPPORTING_WM_CHECK
