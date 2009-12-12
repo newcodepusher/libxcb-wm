@@ -931,30 +931,63 @@ DO_LIST_VALUES(wm_allowed_actions, _NET_WM_ALLOWED_ACTIONS, ATOM, atom)
 
 /**
  * _NET_WM_STRUT
- * _NET_WM_STRUT_PARTIAL
  */
 
 xcb_void_cookie_t
 xcb_ewmh_set_wm_strut(xcb_ewmh_connection_t *ewmh,
-                      xcb_window_t window,
-                      xcb_ewmh_wm_strut_t wm_strut)
+		      xcb_window_t window,
+		      uint32_t left, uint32_t right,
+		      uint32_t top, uint32_t bottom)
 {
+  const uint32_t data[] = { left, right, top, bottom };
+
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_STRUT, CARDINAL, 32, 12, &wm_strut);
+                             ewmh->_NET_WM_STRUT, CARDINAL, 32, countof(data),
+			     data);
 }
 
 xcb_void_cookie_t
 xcb_ewmh_set_wm_strut_checked(xcb_ewmh_connection_t *ewmh,
-                              xcb_window_t window,
-                              xcb_ewmh_wm_strut_t wm_strut)
+			      xcb_window_t window,
+			      uint32_t left, uint32_t right,
+			      uint32_t top, uint32_t bottom)
 {
+  const uint32_t data[] = { left, right, top, bottom };
+
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_STRUT, CARDINAL, 32,
-                                     12, &wm_strut);
+                                     countof(data), data);
 }
 
-DO_GET_PROPERTY(wm_strut, _NET_WM_STRUT, CARDINAL, 12)
-DO_REPLY_STRUCTURE(wm_strut, xcb_ewmh_wm_strut_t)
+DO_GET_PROPERTY(wm_strut, _NET_WM_STRUT, CARDINAL, 4)
+DO_REPLY_STRUCTURE(wm_strut, xcb_ewmh_get_extents_reply_t)
+
+/*
+ * _NET_WM_STRUT_PARTIAL
+ */
+
+xcb_void_cookie_t
+xcb_ewmh_set_wm_strut_partial(xcb_ewmh_connection_t *ewmh,
+			      xcb_window_t window,
+			      xcb_ewmh_wm_strut_partial_t wm_strut)
+{
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
+                             ewmh->_NET_WM_STRUT_PARTIAL, CARDINAL, 32, 12,
+			     &wm_strut);
+}
+
+xcb_void_cookie_t
+xcb_ewmh_set_wm_strut_partial_checked(xcb_ewmh_connection_t *ewmh,
+				      xcb_window_t window,
+				      xcb_ewmh_wm_strut_partial_t wm_strut)
+{
+  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
+                                     window, ewmh->_NET_WM_STRUT_PARTIAL,
+				     CARDINAL, 32, 12, &wm_strut);
+}
+
+DO_GET_PROPERTY(wm_strut_partial, _NET_WM_STRUT_PARTIAL, CARDINAL, 12)
+DO_REPLY_STRUCTURE(wm_strut_partial, xcb_ewmh_wm_strut_partial_t)
 
 /**
  * _NET_WM_ICON_GEOMETRY
@@ -1121,7 +1154,7 @@ xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
 }
 
 DO_GET_PROPERTY(frame_extents, _NET_FRAME_EXTENTS, CARDINAL, 4)
-DO_REPLY_STRUCTURE(frame_extents, xcb_ewmh_get_frame_extents_reply_t)
+DO_REPLY_STRUCTURE(frame_extents, xcb_ewmh_get_extents_reply_t)
 
 /**
  * _NET_WM_PING

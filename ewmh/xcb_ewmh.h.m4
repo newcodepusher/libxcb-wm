@@ -288,7 +288,7 @@ typedef struct {
   uint32_t bottom_start_x;
   /** Ending x coordinate of the bottom strut */
   uint32_t bottom_end_x;
-} xcb_ewmh_wm_strut_t;
+} xcb_ewmh_wm_strut_partial_t;
 
 /**
  * @brief Hold reply of _NET_WM_ICON GetProperty
@@ -316,7 +316,7 @@ typedef struct {
   uint32_t top;
   /** Width of the bottom border */
   uint32_t bottom;
-} xcb_ewmh_get_frame_extents_reply_t;
+} xcb_ewmh_get_extents_reply_t;
 
 /**
  * @brief Hold reply of _NET_WM_FULLSCREEN_MONITORS GetProperty
@@ -1132,7 +1132,7 @@ xcb_ewmh_get_desktop_names_from_reply(xcb_ewmh_connection_t *ewmh,
 				      xcb_ewmh_get_utf8_strings_reply_t *names,
 				      xcb_get_property_reply_t *r)
 {
-  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, names, r);
 }
 
 /**
@@ -1154,7 +1154,7 @@ xcb_ewmh_get_desktop_names_reply(xcb_ewmh_connection_t *ewmh,
 				 xcb_ewmh_get_utf8_strings_reply_t *names,
 				 xcb_generic_error_t **e)
 {
-  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, names, e);
 }
 
 /**
@@ -1828,26 +1828,50 @@ uint8_t xcb_ewmh_get_wm_allowed_actions_reply(xcb_ewmh_connection_t *ewmh,
                                               xcb_generic_error_t **e);
 
 xcb_void_cookie_t xcb_ewmh_set_wm_strut(xcb_ewmh_connection_t *ewmh,
-                                        xcb_window_t window,
-                                        xcb_ewmh_wm_strut_t wm_strut);
+					xcb_window_t window,
+					uint32_t left, uint32_t right,
+					uint32_t top, uint32_t bottom);
 
 xcb_void_cookie_t xcb_ewmh_set_wm_strut_checked(xcb_ewmh_connection_t *ewmh,
-                                                xcb_window_t window,
-                                                xcb_ewmh_wm_strut_t wm_strut);
+						xcb_window_t window,
+						uint32_t left, uint32_t right,
+						uint32_t top, uint32_t bottom);
 
 xcb_get_property_cookie_t xcb_ewmh_get_wm_strut_unchecked(xcb_ewmh_connection_t *ewmh,
-                                                          xcb_window_t window);
+							  xcb_window_t window);
 
 xcb_get_property_cookie_t xcb_ewmh_get_wm_strut(xcb_ewmh_connection_t *ewmh,
-                                                xcb_window_t window);
+						xcb_window_t window);
 
-uint8_t xcb_ewmh_get_wm_strut_from_reply(xcb_ewmh_wm_strut_t *struts,
-                                         xcb_get_property_reply_t *r);
+uint8_t xcb_ewmh_get_wm_strut_from_reply(xcb_ewmh_get_extents_reply_t *struts,
+					 xcb_get_property_reply_t *r);
 
 uint8_t xcb_ewmh_get_wm_strut_reply(xcb_ewmh_connection_t *ewmh,
-                                    xcb_get_property_cookie_t cookie,
-                                    xcb_ewmh_wm_strut_t *struts,
-                                    xcb_generic_error_t **e);
+				    xcb_get_property_cookie_t cookie,
+				    xcb_ewmh_get_extents_reply_t *struts,
+				    xcb_generic_error_t **e);
+
+xcb_void_cookie_t xcb_ewmh_set_wm_strut_partial(xcb_ewmh_connection_t *ewmh,
+						xcb_window_t window,
+						xcb_ewmh_wm_strut_partial_t wm_strut);
+
+xcb_void_cookie_t xcb_ewmh_set_wm_strut_partial_checked(xcb_ewmh_connection_t *ewmh,
+							xcb_window_t window,
+							xcb_ewmh_wm_strut_partial_t wm_strut);
+
+xcb_get_property_cookie_t xcb_ewmh_get_wm_strut_partial_unchecked(xcb_ewmh_connection_t *ewmh,
+								  xcb_window_t window);
+
+xcb_get_property_cookie_t xcb_ewmh_get_wm_strut_partial(xcb_ewmh_connection_t *ewmh,
+							xcb_window_t window);
+
+uint8_t xcb_ewmh_get_wm_strut_partial_from_reply(xcb_ewmh_wm_strut_partial_t *struts,
+						 xcb_get_property_reply_t *r);
+
+uint8_t xcb_ewmh_get_wm_strut_partial_reply(xcb_ewmh_connection_t *ewmh,
+					    xcb_get_property_cookie_t cookie,
+					    xcb_ewmh_wm_strut_partial_t *struts,
+					    xcb_generic_error_t **e);
 
 xcb_void_cookie_t xcb_ewmh_set_wm_icon_geometry(xcb_ewmh_connection_t *ewmh,
                                                 xcb_window_t window,
@@ -2005,12 +2029,12 @@ xcb_get_property_cookie_t xcb_ewmh_get_frame_extents_unchecked(xcb_ewmh_connecti
 xcb_get_property_cookie_t xcb_ewmh_get_frame_extents(xcb_ewmh_connection_t *ewmh,
                                                      xcb_window_t window);
 
-uint8_t xcb_ewmh_get_frame_extents_from_reply(xcb_ewmh_get_frame_extents_reply_t *frame_extents,
+uint8_t xcb_ewmh_get_frame_extents_from_reply(xcb_ewmh_get_extents_reply_t *frame_extents,
                                               xcb_get_property_reply_t *r);
 
 uint8_t xcb_ewmh_get_frame_extents_reply(xcb_ewmh_connection_t *ewmh,
                                          xcb_get_property_cookie_t cookie,
-                                         xcb_ewmh_get_frame_extents_reply_t *frame_extents,
+                                         xcb_ewmh_get_extents_reply_t *frame_extents,
                                          xcb_generic_error_t **e);
 
 xcb_void_cookie_t xcb_ewmh_send_wm_ping(xcb_ewmh_connection_t *ewmh,
