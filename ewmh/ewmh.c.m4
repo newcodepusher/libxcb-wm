@@ -1003,7 +1003,7 @@ xcb_ewmh_set_wm_icon_geometry_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_ICON_GEOMETRY,
-                                     CARDINAL, 32, 4, data);
+                                     CARDINAL, 32, countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1015,7 +1015,8 @@ xcb_ewmh_set_wm_icon_geometry(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32, 4, data);
+                             ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32,
+			     countof(data), data);
 }
 
 DO_GET_PROPERTY(wm_icon_geometry, _NET_WM_ICON_GEOMETRY, CARDINAL, 4)
