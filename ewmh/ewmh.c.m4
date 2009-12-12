@@ -1144,7 +1144,8 @@ xcb_ewmh_set_frame_extents(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32, 4, data);
+                             ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32,
+			     countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1157,7 +1158,7 @@ xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_FRAME_EXTENTS, CARDINAL,
-                                     32, 4, data);
+                                     32, countof(data), data);
 }
 
 DO_GET_PROPERTY(frame_extents, _NET_FRAME_EXTENTS, CARDINAL, 4)
@@ -1194,7 +1195,8 @@ xcb_ewmh_set_wm_sync_request_counter(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { low, high };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32, 2, data);
+                             ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32,
+			     countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1207,7 +1209,7 @@ xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_SYNC_REQUEST,
-                                     CARDINAL, 32, 2, data);
+                                     CARDINAL, 32, countof(data), data);
 }
 
 DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST, CARDINAL, 2)
@@ -1222,7 +1224,7 @@ xcb_ewmh_get_wm_sync_request_counter_from_reply(uint64_t *counter,
     return 0;
 
   uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
-  *counter = (r_value[0] | GET_LEN_FROM_NB(r_value[1], 8));
+  *counter = (r_value[0] | r_value[1] << 32);
 
   return 1;
 }
@@ -1248,7 +1250,7 @@ xcb_ewmh_send_wm_sync_request(xcb_ewmh_connection_t *ewmh,
                               uint64_t counter)
 {
   const uint32_t data[] = { ewmh->_NET_WM_SYNC_REQUEST, timestamp, counter,
-                            GET_NB_FROM_LEN(counter, 32) };
+                            counter >> 32 };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window, window,
                                       ewmh->WM_PROTOCOLS, countof(data), data);
@@ -1268,7 +1270,7 @@ xcb_ewmh_set_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
                              ewmh->_NET_WM_FULLSCREEN_MONITORS, CARDINAL, 32,
-                             4, data);
+                             countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1281,7 +1283,7 @@ xcb_ewmh_set_wm_fullscreen_monitors_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_FULLSCREEN_MONITORS,
-                                     CARDINAL, 32, 4, data);
+                                     CARDINAL, 32, countof(data), data);
 }
 
 DO_GET_PROPERTY(wm_fullscreen_monitors, _NET_WM_FULLSCREEN_MONITORS, CARDINAL, 4)
