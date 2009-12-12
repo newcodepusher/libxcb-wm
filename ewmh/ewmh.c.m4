@@ -748,7 +748,8 @@ xcb_ewmh_set_desktop_layout(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-                             ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32, 2, data);
+                             ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32,
+			     countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -761,7 +762,7 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      ewmh->root, ewmh->_NET_DESKTOP_LAYOUT,
-                                     CARDINAL, 32, 2, data);
+                                     CARDINAL, 32, countof(data), data);
 }
 
 /**
@@ -801,8 +802,7 @@ xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
                                    uint32_t x, uint32_t y,
                                    uint32_t width, uint32_t height)
 {
-  const uint32_t data[] = { (gravity | flags |
-                             GET_LEN_FROM_NB(source_indication, 12)),
+  const uint32_t data[] = { (gravity | flags | source_indication << 12),
                             x, y, width, height };
 
   return xcb_ewmh_send_client_message(ewmh->connection, moveresize_window,
