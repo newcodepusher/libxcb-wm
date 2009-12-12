@@ -63,12 +63,6 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
 
 #define NB_EWMH_ATOMS countof(ewmh_atoms)
 
-/** Get the number of elements from the reply length */
-#define GET_NB_FROM_LEN(len, shift_value) ((len) >> (shift_value))
-
-/** Get the length of elements from the number of elements of a reply */
-#define GET_LEN_FROM_NB(nb, shift_value) ((nb) << (shift_value))
-
 /**
  * Common functions and macro
  */
@@ -132,7 +126,7 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
                                     xcb_get_property_reply_t *r)        \
   {                                                                     \
     if(!r || r->type != atype || r->format != 32 ||                     \
-       xcb_get_property_value_length(r) != 4)                           \
+       xcb_get_property_value_length(r) != sizeof(ctype))		\
       return 0;                                                         \
                                                                         \
     *atom_value = *((ctype *) xcb_get_property_value(r));               \
@@ -626,7 +620,7 @@ xcb_ewmh_get_desktop_geometry_from_reply(uint32_t *width, uint32_t *height,
                                          xcb_get_property_reply_t *r)
 {
   if(!r || r->type != CARDINAL || r->format != 32 ||
-     xcb_get_property_value_length(r) != 8)
+     xcb_get_property_value_length(r) != (sizeof(uint32_t) * 2))
     return 0;
 
   uint32_t *value = (uint32_t *) xcb_get_property_value(r);
@@ -1074,7 +1068,7 @@ xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
                                 xcb_get_property_reply_t *r)
 {
   if(!r || r->type != CARDINAL || r->format != 32 ||
-     GET_NB_FROM_LEN(xcb_get_property_value_length(r), 2) <= 2)
+     xcb_get_property_value_length(r) <= (sizeof(uint32_t) * 2))
     return 0;
 
   wm_icon->_reply = r;
