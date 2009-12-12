@@ -1114,6 +1114,12 @@ xcb_ewmh_get_wm_icon_reply_wipe(xcb_ewmh_get_wm_icon_reply_t *wm_icon)
 DO_SINGLE_VALUE(wm_pid, _NET_WM_PID, CARDINAL, uint32_t)
 
 /**
+ * _NET_WM_HANDLED_ICONS
+ */
+
+DO_SINGLE_VALUE(wm_handled_icons, _NET_WM_HANDLED_ICONS, CARDINAL, uint32_t)
+
+/**
  * _NET_WM_USER_TIME
  */
 
