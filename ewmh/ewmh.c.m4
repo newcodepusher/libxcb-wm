@@ -149,8 +149,7 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
       xcb_get_property_reply(ewmh->connection,                          \
                              cookie, e);                                \
                                                                         \
-    const uint8_t ret = xcb_ewmh_get_##fname##_from_reply(atom_value,   \
-                                                          r);           \
+    const uint8_t ret = xcb_ewmh_get_##fname##_from_reply(atom_value, r); \
                                                                         \
     free(r);                                                            \
     return ret;                                                         \
@@ -408,27 +407,8 @@ xcb_ewmh_get_utf8_strings_reply_wipe(xcb_ewmh_get_utf8_strings_reply_t *data)
   free(data->_reply);
 }
 
-#define DO_REPLY_UTF8_STRING(fname)                                     \
-  uint8_t                                                               \
-  xcb_ewmh_get_##fname##_from_reply(xcb_ewmh_connection_t *ewmh,        \
-                                    xcb_ewmh_get_utf8_strings_reply_t *data, \
-                                    xcb_get_property_reply_t *r)        \
-  {                                                                     \
-    return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);         \
-  }                                                                     \
-                                                                        \
-  uint8_t                                                               \
-  xcb_ewmh_get_##fname##_reply(xcb_ewmh_connection_t *ewmh,             \
-                               xcb_get_property_cookie_t cookie,        \
-                               xcb_ewmh_get_utf8_strings_reply_t *data, \
-                               xcb_generic_error_t **e)                 \
-  {                                                                     \
-    return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);      \
-  }
-
 #define DO_ROOT_UTF8_STRING(fname, property)                            \
   DO_GET_ROOT_PROPERTY(fname, property, 0, UINT_MAX)                    \
-  DO_REPLY_UTF8_STRING(fname)                                           \
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname(xcb_ewmh_connection_t *ewmh,                     \
@@ -455,7 +435,6 @@ xcb_ewmh_get_utf8_strings_reply_wipe(xcb_ewmh_get_utf8_strings_reply_t *data)
 
 #define DO_UTF8_STRING(fname, property)                                 \
   DO_GET_PROPERTY(fname, property, 0, UINT_MAX)                         \
-  DO_REPLY_UTF8_STRING(fname)                                           \
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname(xcb_ewmh_connection_t *ewmh,                     \

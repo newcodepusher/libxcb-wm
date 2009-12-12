@@ -1127,9 +1127,13 @@ xcb_get_property_cookie_t xcb_ewmh_get_desktop_names(xcb_ewmh_connection_t *ewmh
  * @param r GetProperty _NET_DESKTOP_NAMES reply
  * @return Return 1 on success, 0 otherwise
  */
-uint8_t xcb_ewmh_get_desktop_names_from_reply(xcb_ewmh_connection_t *ewmh,
-                                              xcb_ewmh_get_utf8_strings_reply_t *names,
-                                              xcb_get_property_reply_t *r);
+static inline uint8_t
+xcb_ewmh_get_desktop_names_from_reply(xcb_ewmh_connection_t *ewmh,
+				      xcb_ewmh_get_utf8_strings_reply_t *names,
+				      xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+}
 
 /**
  * @brief Get reply from the GetProperty _NET_DESKTOP_NAMES cookie
@@ -1144,10 +1148,14 @@ uint8_t xcb_ewmh_get_desktop_names_from_reply(xcb_ewmh_connection_t *ewmh,
  * @param The xcb_generic_error_t supplied
  * @return Return 1 on success, 0 otherwise
  */
-uint8_t xcb_ewmh_get_desktop_names_reply(xcb_ewmh_connection_t *ewmh,
-                                         xcb_get_property_cookie_t cookie,
-                                         xcb_ewmh_get_utf8_strings_reply_t *names,
-                                         xcb_generic_error_t **e);
+static inline uint8_t
+xcb_ewmh_get_desktop_names_reply(xcb_ewmh_connection_t *ewmh,
+				 xcb_get_property_cookie_t cookie,
+				 xcb_ewmh_get_utf8_strings_reply_t *names,
+				 xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+}
 
 /**
  * @brief Send a ChangeProperty request for _NET_ACTIVE_WINDOW
@@ -1589,14 +1597,21 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_name_unchecked(xcb_ewmh_connection_t *
 xcb_get_property_cookie_t xcb_ewmh_get_wm_name(xcb_ewmh_connection_t *ewmh,
                                                xcb_window_t window);
 
-uint8_t xcb_ewmh_get_wm_name_from_reply(xcb_ewmh_connection_t *ewmh,
-                                        xcb_ewmh_get_utf8_strings_reply_t *data,
-                                        xcb_get_property_reply_t *r);
+static inline uint8_t
+xcb_ewmh_get_wm_name_from_reply(xcb_ewmh_connection_t *ewmh,
+				xcb_ewmh_get_utf8_strings_reply_t *data,
+				xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+}
 
 uint8_t  xcb_ewmh_get_wm_name_reply(xcb_ewmh_connection_t *ewmh,
                                     xcb_get_property_cookie_t cookie,
                                     xcb_ewmh_get_utf8_strings_reply_t *data,
-                                    xcb_generic_error_t **e);
+                                    xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+}
 
 xcb_void_cookie_t xcb_ewmh_set_wm_visible_name(xcb_ewmh_connection_t *ewmh,
                                                xcb_window_t window,
@@ -1614,14 +1629,22 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_visible_name_unchecked(xcb_ewmh_connec
 xcb_get_property_cookie_t xcb_ewmh_get_wm_visible_name(xcb_ewmh_connection_t *ewmh,
                                                        xcb_window_t window);
 
-uint8_t xcb_ewmh_get_wm_visible_name_from_reply(xcb_ewmh_connection_t *ewmh,
-                                                xcb_ewmh_get_utf8_strings_reply_t *data,
-                                                xcb_get_property_reply_t *r);
+static inline uint8_t
+xcb_ewmh_get_wm_visible_name_from_reply(xcb_ewmh_connection_t *ewmh,
+					xcb_ewmh_get_utf8_strings_reply_t *data,
+					xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+}
 
-uint8_t  xcb_ewmh_get_wm_visible_name_reply(xcb_ewmh_connection_t *ewmh,
-                                            xcb_get_property_cookie_t cookie,
-                                            xcb_ewmh_get_utf8_strings_reply_t *data,
-                                            xcb_generic_error_t **e);
+static inline uint8_t
+xcb_ewmh_get_wm_visible_name_reply(xcb_ewmh_connection_t *ewmh,
+				   xcb_get_property_cookie_t cookie,
+				   xcb_ewmh_get_utf8_strings_reply_t *data,
+				   xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+}
 
 xcb_void_cookie_t xcb_ewmh_set_wm_icon_name(xcb_ewmh_connection_t *ewmh,
                                             xcb_window_t window,
@@ -1639,14 +1662,22 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_icon_name_unchecked(xcb_ewmh_connectio
 xcb_get_property_cookie_t xcb_ewmh_get_wm_icon_name(xcb_ewmh_connection_t *ewmh,
                                                     xcb_window_t window);
 
-uint8_t xcb_ewmh_get_wm_icon_name_from_reply(xcb_ewmh_connection_t *ewmh,
-                                             xcb_ewmh_get_utf8_strings_reply_t *data,
-                                             xcb_get_property_reply_t *r);
+static inline uint8_t
+xcb_ewmh_get_wm_icon_name_from_reply(xcb_ewmh_connection_t *ewmh,
+				     xcb_ewmh_get_utf8_strings_reply_t *data,
+				     xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+}
 
-uint8_t  xcb_ewmh_get_wm_icon_name_reply(xcb_ewmh_connection_t *ewmh,
-                                         xcb_get_property_cookie_t cookie,
-                                         xcb_ewmh_get_utf8_strings_reply_t *data,
-                                         xcb_generic_error_t **e);
+static inline uint8_t
+xcb_ewmh_get_wm_icon_name_reply(xcb_ewmh_connection_t *ewmh,
+				xcb_get_property_cookie_t cookie,
+				xcb_ewmh_get_utf8_strings_reply_t *data,
+				xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+}
 
 xcb_void_cookie_t xcb_ewmh_set_wm_visible_icon_name(xcb_ewmh_connection_t *ewmh,
                                                     xcb_window_t window,
@@ -1664,14 +1695,22 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_visible_icon_name_unchecked(xcb_ewmh_c
 xcb_get_property_cookie_t xcb_ewmh_get_wm_visible_icon_name(xcb_ewmh_connection_t *ewmh,
                                                             xcb_window_t window);
 
-uint8_t xcb_ewmh_get_wm_visible_icon_name_from_reply(xcb_ewmh_connection_t *ewmh,
-                                                     xcb_ewmh_get_utf8_strings_reply_t *data,
-                                                     xcb_get_property_reply_t *r);
+static inline uint8_t
+xcb_ewmh_get_wm_visible_icon_name_from_reply(xcb_ewmh_connection_t *ewmh,
+					     xcb_ewmh_get_utf8_strings_reply_t *data,
+					     xcb_get_property_reply_t *r)
+{
+  return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
+}
 
-uint8_t  xcb_ewmh_get_wm_visible_icon_name_reply(xcb_ewmh_connection_t *ewmh,
-                                                 xcb_get_property_cookie_t cookie,
-                                                 xcb_ewmh_get_utf8_strings_reply_t *data,
-                                                 xcb_generic_error_t **e);
+static inline uint8_t
+xcb_ewmh_get_wm_visible_icon_name_reply(xcb_ewmh_connection_t *ewmh,
+					xcb_get_property_cookie_t cookie,
+					xcb_ewmh_get_utf8_strings_reply_t *data,
+					xcb_generic_error_t **e)
+{
+  return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
+}
 
 xcb_void_cookie_t xcb_ewmh_set_wm_desktop(xcb_ewmh_connection_t *ewmh,
                                           xcb_window_t window,
