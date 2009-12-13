@@ -2,7 +2,7 @@
 #define __XCB_EWMH_H__
 
 /*
- * Copyright (C) 2009 Arnaud Fontaine <arnau@debian.org>
+ * Copyright (C) 2009 Arnaud Fontaine <arnau@mini-dweeb.org>
  *
  * Permission  is  hereby  granted,  free  of charge,  to  any  person
  * obtaining  a copy  of  this software  and associated  documentation

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2009 Arnaud Fontaine <arnau@debian.org>
+ * Copyright © 2009 Arnaud Fontaine <arnau@mini-dweeb.org>
  *
  * Permission  is  hereby  granted,  free  of charge,  to  any  person
  * obtaining  a copy  of  this software  and associated  documentation
@@ -335,7 +335,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, XCB_ATOM_CARDINAL, uint32_t)
   xcb_ewmh_get_##fname##_from_reply(ctype *out,                         \
                                     xcb_get_property_reply_t *r)        \
   {                                                                     \
-    if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||		\
+    if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||         \
        xcb_get_property_value_length(r) != sizeof(ctype))               \
       return 0;                                                         \
                                                                         \
@@ -570,21 +570,21 @@ DO_ROOT_LIST_VALUES(supported, _NET_SUPPORTED, XCB_ATOM_ATOM, xcb_atom_t)
 DO_ROOT_LIST_VALUES(client_list, _NET_CLIENT_LIST, XCB_ATOM_WINDOW, xcb_window_t)
 
 DO_ROOT_LIST_VALUES(client_list_stacking, _NET_CLIENT_LIST_STACKING,
-		    XCB_ATOM_WINDOW, xcb_window_t)
+                    XCB_ATOM_WINDOW, xcb_window_t)
 
 /**
  * _NET_NUMBER_OF_DESKTOPS
  */
 
 DO_ROOT_SINGLE_VALUE(number_of_desktops, _NET_NUMBER_OF_DESKTOPS,
-		     XCB_ATOM_CARDINAL, uint32_t)
+                     XCB_ATOM_CARDINAL, uint32_t)
 
 /**
  * _NET_DESKTOP_GEOMETRY
  */
 
 DO_GET_ROOT_PROPERTY(desktop_geometry, _NET_DESKTOP_GEOMETRY,
-		     XCB_ATOM_CARDINAL, 2L)
+                     XCB_ATOM_CARDINAL, 2L)
 
 xcb_void_cookie_t
 xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
@@ -594,7 +594,7 @@ xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
                              ewmh->_NET_DESKTOP_GEOMETRY, XCB_ATOM_CARDINAL,
-			     32, 2, data);
+                             32, 2, data);
 }
 
 xcb_void_cookie_t
@@ -655,7 +655,7 @@ DO_ROOT_LIST_VALUES(desktop_viewport, _NET_DESKTOP_VIEWPORT, XCB_ATOM_CARDINAL,
                     xcb_ewmh_coordinates_t)
 
 DO_REPLY_LIST_VALUES(desktop_viewport, XCB_ATOM_CARDINAL,
-		     xcb_ewmh_coordinates_t)
+                     xcb_ewmh_coordinates_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
@@ -673,7 +673,7 @@ xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
  */
 
 DO_ROOT_SINGLE_VALUE(current_desktop, _NET_CURRENT_DESKTOP, XCB_ATOM_CARDINAL,
-		     uint32_t)
+                     uint32_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
@@ -697,7 +697,7 @@ DO_ROOT_UTF8_STRING(desktop_names, _NET_DESKTOP_NAMES)
  */
 
 DO_ROOT_SINGLE_VALUE(active_window, _NET_ACTIVE_WINDOW, XCB_ATOM_WINDOW,
-		     xcb_window_t)
+                     xcb_window_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
@@ -718,7 +718,7 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
  */
 
 DO_ROOT_LIST_VALUES(workarea, _NET_WORKAREA, XCB_ATOM_CARDINAL,
-		    xcb_ewmh_geometry_t)
+                    xcb_ewmh_geometry_t)
 
 DO_REPLY_LIST_VALUES(workarea, XCB_ATOM_CARDINAL, xcb_ewmh_geometry_t)
 
@@ -727,14 +727,14 @@ DO_REPLY_LIST_VALUES(workarea, XCB_ATOM_CARDINAL, xcb_ewmh_geometry_t)
  */
 
 DO_ROOT_SINGLE_VALUE(supporting_wm_check, _NET_SUPPORTING_WM_CHECK,
-		     XCB_ATOM_WINDOW, xcb_window_t)
+                     XCB_ATOM_WINDOW, xcb_window_t)
 
 /**
  * _NET_VIRTUAL_ROOTS
  */
 
 DO_ROOT_LIST_VALUES(virtual_roots, _NET_VIRTUAL_ROOTS, XCB_ATOM_WINDOW,
-		    xcb_window_t)
+                    xcb_window_t)
 
 /**
  * _NET_DESKTOP_LAYOUT
@@ -767,7 +767,7 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      ewmh->root, ewmh->_NET_DESKTOP_LAYOUT,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     data);
 }
 
 /**
@@ -775,7 +775,7 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
  */
 
 DO_ROOT_SINGLE_VALUE(showing_desktop, _NET_SHOWING_DESKTOP, XCB_ATOM_CARDINAL,
-		     uint32_t)
+                     uint32_t)
 
 /**
  * _NET_CLOSE_WINDOW
@@ -949,7 +949,7 @@ xcb_ewmh_set_wm_strut(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
                              ewmh->_NET_WM_STRUT, XCB_ATOM_CARDINAL, 32,
-			     countof(data), data);
+                             countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -962,8 +962,8 @@ xcb_ewmh_set_wm_strut_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_STRUT,
-				     XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+                                     data);
 }
 
 DO_GET_PROPERTY(wm_strut, _NET_WM_STRUT, XCB_ATOM_CARDINAL, 4)
@@ -980,7 +980,7 @@ xcb_ewmh_set_wm_strut_partial(xcb_ewmh_connection_t *ewmh,
 {
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
                              ewmh->_NET_WM_STRUT_PARTIAL, XCB_ATOM_CARDINAL, 32,
-			     12, &wm_strut);
+                             12, &wm_strut);
 }
 
 xcb_void_cookie_t
@@ -1011,7 +1011,7 @@ xcb_ewmh_set_wm_icon_geometry_checked(xcb_ewmh_connection_t *ewmh,
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_ICON_GEOMETRY,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     data);
 }
 
 xcb_void_cookie_t
@@ -1057,7 +1057,7 @@ xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_ICON,
-				     XCB_ATOM_CARDINAL, 32, data_len, data);
+                                     XCB_ATOM_CARDINAL, 32, data_len, data);
 }
 
 xcb_void_cookie_t
@@ -1073,7 +1073,7 @@ xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
                              ewmh->_NET_WM_ICON, XCB_ATOM_CARDINAL, 32,
-			     data_len, data);
+                             data_len, data);
 }
 
 DO_GET_PROPERTY(wm_icon, _NET_WM_ICON, XCB_ATOM_CARDINAL, UINT_MAX)
@@ -1127,7 +1127,7 @@ DO_SINGLE_VALUE(wm_pid, _NET_WM_PID, XCB_ATOM_CARDINAL, uint32_t)
  */
 
 DO_SINGLE_VALUE(wm_handled_icons, _NET_WM_HANDLED_ICONS, XCB_ATOM_CARDINAL,
-		uint32_t)
+                uint32_t)
 
 /**
  * _NET_WM_USER_TIME
@@ -1140,7 +1140,7 @@ DO_SINGLE_VALUE(wm_user_time, _NET_WM_USER_TIME, XCB_ATOM_CARDINAL, uint32_t)
  */
 
 DO_SINGLE_VALUE(wm_user_time_window, _NET_WM_USER_TIME_WINDOW, XCB_ATOM_CARDINAL,
-		uint32_t)
+                uint32_t)
 
 /**
  * _NET_FRAME_EXTENTS
@@ -1169,8 +1169,8 @@ xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_FRAME_EXTENTS,
-				     XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+                                     data);
 }
 
 DO_GET_PROPERTY(frame_extents, _NET_FRAME_EXTENTS, XCB_ATOM_CARDINAL, 4)
@@ -1222,11 +1222,11 @@ xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_SYNC_REQUEST,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     data);
 }
 
 DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST,
-		XCB_ATOM_CARDINAL, 2)
+                XCB_ATOM_CARDINAL, 2)
 
 uint8_t
 xcb_ewmh_get_wm_sync_request_counter_from_reply(uint64_t *counter,
@@ -1284,7 +1284,7 @@ xcb_ewmh_set_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
                              ewmh->_NET_WM_FULLSCREEN_MONITORS,
-			     XCB_ATOM_CARDINAL, 32, countof(data), data);
+                             XCB_ATOM_CARDINAL, 32, countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1298,11 +1298,11 @@ xcb_ewmh_set_wm_fullscreen_monitors_checked(xcb_ewmh_connection_t *ewmh,
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_FULLSCREEN_MONITORS,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
-				     data);
+                                     data);
 }
 
 DO_GET_PROPERTY(wm_fullscreen_monitors, _NET_WM_FULLSCREEN_MONITORS,
-		XCB_ATOM_CARDINAL, 4)
+                XCB_ATOM_CARDINAL, 4)
 
 DO_REPLY_STRUCTURE(wm_fullscreen_monitors,
                    xcb_ewmh_get_wm_fullscreen_monitors_reply_t)
