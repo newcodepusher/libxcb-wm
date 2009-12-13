@@ -7,8 +7,8 @@ xcbinclude_HEADERS = xcb_ewmh.h
 AM_CFLAGS = $(CWARNFLAGS)
 
 libxcb_ewmh_la_SOURCES = ewmh.c ewmh.c.m4 atomlist.m4 xcb_ewmh.h.m4
-libxcb_ewmh_la_CPPFLAGS = $(XCB_CFLAGS) $(XCB_ATOM_CFLAGS) $(XCB_AUX_CFLAGS)
-libxcb_ewmh_la_LIBADD = $(XCB_LIBS) $(XCB_ATOM_LIBS) $(XCB_AUX_LIBS)
+libxcb_ewmh_la_CPPFLAGS = $(XCB_CFLAGS) $(XPROTO_CFLAGS) $(XCB_AUX_CFLAGS)
+libxcb_ewmh_la_LIBADD = $(XCB_LIBS) $(XPROTO_LIBS) $(XCB_AUX_LIBS)
 libxcb_ewmh_la_LDFLAGS = -version-info 1:0:0
 
 pkgconfig_DATA = xcb-ewmh.pc

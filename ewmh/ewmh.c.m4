@@ -32,8 +32,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include <xcb/xcb.h>
+#include <xcb/xproto.h>
+
 #include "xcb_ewmh.h"
-#include "xcb_atom.h"
 #include "xcb_aux.h"
 #include "../xcb-util-common.h"
 
@@ -150,10 +152,10 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
   }
 
 /** Define reply functions for common WINDOW Atom */
-DO_REPLY_SINGLE_VALUE(window, WINDOW, xcb_window_t)
+DO_REPLY_SINGLE_VALUE(window, XCB_ATOM_WINDOW, xcb_window_t)
 
 /** Define reply functions for common CARDINAL Atom */
-DO_REPLY_SINGLE_VALUE(cardinal, CARDINAL, uint32_t)
+DO_REPLY_SINGLE_VALUE(cardinal, XCB_ATOM_CARDINAL, uint32_t)
 
 #define DO_SINGLE_VALUE(fname, property, atype, ctype)                  \
   DO_GET_PROPERTY(fname, property, atype, 1L)                           \
@@ -333,7 +335,7 @@ DO_REPLY_SINGLE_VALUE(cardinal, CARDINAL, uint32_t)
   xcb_ewmh_get_##fname##_from_reply(ctype *out,                         \
                                     xcb_get_property_reply_t *r)        \
   {                                                                     \
-    if(!r || r->type != CARDINAL || r->format != 32 ||                  \
+    if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||		\
        xcb_get_property_value_length(r) != sizeof(ctype))               \
       return 0;                                                         \
                                                                         \
@@ -485,8 +487,8 @@ xcb_ewmh_send_client_message(xcb_connection_t *c,
                         (char *) &ev);
 }
 
-DO_REPLY_LIST_VALUES(windows, WINDOW, xcb_window_t)
-DO_REPLY_LIST_VALUES(atoms, ATOM, xcb_atom_t)
+DO_REPLY_LIST_VALUES(windows, XCB_ATOM_WINDOW, xcb_window_t)
+DO_REPLY_LIST_VALUES(atoms, XCB_ATOM_ATOM, xcb_atom_t)
 
 /**
  * Atoms initialisation
@@ -558,30 +560,31 @@ xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
  * _NET_SUPPORTED
  */
 
-DO_ROOT_LIST_VALUES(supported, _NET_SUPPORTED, ATOM, xcb_atom_t)
+DO_ROOT_LIST_VALUES(supported, _NET_SUPPORTED, XCB_ATOM_ATOM, xcb_atom_t)
 
 /**
  * _NET_CLIENT_LIST
  * _NET_CLIENT_LIST_STACKING
  */
 
-DO_ROOT_LIST_VALUES(client_list, _NET_CLIENT_LIST, WINDOW, xcb_window_t)
+DO_ROOT_LIST_VALUES(client_list, _NET_CLIENT_LIST, XCB_ATOM_WINDOW, xcb_window_t)
 
-DO_ROOT_LIST_VALUES(client_list_stacking, _NET_CLIENT_LIST_STACKING, WINDOW,
-                    xcb_window_t)
+DO_ROOT_LIST_VALUES(client_list_stacking, _NET_CLIENT_LIST_STACKING,
+		    XCB_ATOM_WINDOW, xcb_window_t)
 
 /**
  * _NET_NUMBER_OF_DESKTOPS
  */
 
-DO_ROOT_SINGLE_VALUE(number_of_desktops, _NET_NUMBER_OF_DESKTOPS, CARDINAL,
-                     uint32_t)
+DO_ROOT_SINGLE_VALUE(number_of_desktops, _NET_NUMBER_OF_DESKTOPS,
+		     XCB_ATOM_CARDINAL, uint32_t)
 
 /**
  * _NET_DESKTOP_GEOMETRY
  */
 
-DO_GET_ROOT_PROPERTY(desktop_geometry, _NET_DESKTOP_GEOMETRY, CARDINAL, 2L)
+DO_GET_ROOT_PROPERTY(desktop_geometry, _NET_DESKTOP_GEOMETRY,
+		     XCB_ATOM_CARDINAL, 2L)
 
 xcb_void_cookie_t
 xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
@@ -590,7 +593,8 @@ xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { new_width, new_height };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-                             ewmh->_NET_DESKTOP_GEOMETRY, CARDINAL, 32, 2, data);
+                             ewmh->_NET_DESKTOP_GEOMETRY, XCB_ATOM_CARDINAL,
+			     32, 2, data);
 }
 
 xcb_void_cookie_t
@@ -601,7 +605,7 @@ xcb_ewmh_set_desktop_geometry_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      ewmh->root, ewmh->_NET_DESKTOP_GEOMETRY,
-                                     CARDINAL, 32, 2, data);
+                                     XCB_ATOM_CARDINAL, 32, 2, data);
 }
 
 xcb_void_cookie_t
@@ -619,7 +623,7 @@ uint8_t
 xcb_ewmh_get_desktop_geometry_from_reply(uint32_t *width, uint32_t *height,
                                          xcb_get_property_reply_t *r)
 {
-  if(!r || r->type != CARDINAL || r->format != 32 ||
+  if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||
      xcb_get_property_value_length(r) != (sizeof(uint32_t) * 2))
     return 0;
 
@@ -647,10 +651,11 @@ xcb_ewmh_get_desktop_geometry_reply(xcb_ewmh_connection_t *ewmh,
  * _NET_DESKTOP_VIEWPORT
  */
 
-DO_ROOT_LIST_VALUES(desktop_viewport, _NET_DESKTOP_VIEWPORT, CARDINAL,
+DO_ROOT_LIST_VALUES(desktop_viewport, _NET_DESKTOP_VIEWPORT, XCB_ATOM_CARDINAL,
                     xcb_ewmh_coordinates_t)
 
-DO_REPLY_LIST_VALUES(desktop_viewport, CARDINAL, xcb_ewmh_coordinates_t)
+DO_REPLY_LIST_VALUES(desktop_viewport, XCB_ATOM_CARDINAL,
+		     xcb_ewmh_coordinates_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
@@ -667,7 +672,8 @@ xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
  * _NET_CURRENT_DESKTOP
  */
 
-DO_ROOT_SINGLE_VALUE(current_desktop, _NET_CURRENT_DESKTOP, CARDINAL, uint32_t)
+DO_ROOT_SINGLE_VALUE(current_desktop, _NET_CURRENT_DESKTOP, XCB_ATOM_CARDINAL,
+		     uint32_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
@@ -690,7 +696,8 @@ DO_ROOT_UTF8_STRING(desktop_names, _NET_DESKTOP_NAMES)
  * _NET_ACTIVE_WINDOW
  */
 
-DO_ROOT_SINGLE_VALUE(active_window, _NET_ACTIVE_WINDOW, WINDOW, xcb_window_t)
+DO_ROOT_SINGLE_VALUE(active_window, _NET_ACTIVE_WINDOW, XCB_ATOM_WINDOW,
+		     xcb_window_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
@@ -710,27 +717,30 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
  * _NET_WORKAREA
  */
 
-DO_ROOT_LIST_VALUES(workarea, _NET_WORKAREA, CARDINAL, xcb_ewmh_geometry_t)
-DO_REPLY_LIST_VALUES(workarea, CARDINAL, xcb_ewmh_geometry_t)
+DO_ROOT_LIST_VALUES(workarea, _NET_WORKAREA, XCB_ATOM_CARDINAL,
+		    xcb_ewmh_geometry_t)
+
+DO_REPLY_LIST_VALUES(workarea, XCB_ATOM_CARDINAL, xcb_ewmh_geometry_t)
 
 /**
  * _NET_SUPPORTING_WM_CHECK
  */
 
-DO_ROOT_SINGLE_VALUE(supporting_wm_check, _NET_SUPPORTING_WM_CHECK, WINDOW,
-                     xcb_window_t)
+DO_ROOT_SINGLE_VALUE(supporting_wm_check, _NET_SUPPORTING_WM_CHECK,
+		     XCB_ATOM_WINDOW, xcb_window_t)
 
 /**
  * _NET_VIRTUAL_ROOTS
  */
 
-DO_ROOT_LIST_VALUES(virtual_roots, _NET_VIRTUAL_ROOTS, WINDOW, xcb_window_t)
+DO_ROOT_LIST_VALUES(virtual_roots, _NET_VIRTUAL_ROOTS, XCB_ATOM_WINDOW,
+		    xcb_window_t)
 
 /**
  * _NET_DESKTOP_LAYOUT
  */
 
-DO_GET_ROOT_PROPERTY(desktop_layout, _NET_DESKTOP_LAYOUT, CARDINAL, 4)
+DO_GET_ROOT_PROPERTY(desktop_layout, _NET_DESKTOP_LAYOUT, XCB_ATOM_CARDINAL, 4)
 DO_REPLY_STRUCTURE(desktop_layout, xcb_ewmh_get_desktop_layout_reply_t)
 
 xcb_void_cookie_t
@@ -742,7 +752,7 @@ xcb_ewmh_set_desktop_layout(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
-                             ewmh->_NET_DESKTOP_LAYOUT, CARDINAL, 32,
+                             ewmh->_NET_DESKTOP_LAYOUT, XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
@@ -756,14 +766,16 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      ewmh->root, ewmh->_NET_DESKTOP_LAYOUT,
-                                     CARDINAL, 32, countof(data), data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
 /**
  * _NET_SHOWING_DESKTOP
  */
 
-DO_ROOT_SINGLE_VALUE(showing_desktop, _NET_SHOWING_DESKTOP, CARDINAL, uint32_t)
+DO_ROOT_SINGLE_VALUE(showing_desktop, _NET_SHOWING_DESKTOP, XCB_ATOM_CARDINAL,
+		     uint32_t)
 
 /**
  * _NET_CLOSE_WINDOW
@@ -869,7 +881,7 @@ DO_UTF8_STRING(wm_visible_icon_name, _NET_WM_VISIBLE_ICON_NAME)
  * _NET_WM_DESKTOP
  */
 
-DO_SINGLE_VALUE(wm_desktop, _NET_WM_DESKTOP, CARDINAL, uint32_t)
+DO_SINGLE_VALUE(wm_desktop, _NET_WM_DESKTOP, XCB_ATOM_CARDINAL, uint32_t)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
@@ -890,7 +902,7 @@ xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
  * TODO: check possible atoms?
  */
 
-DO_LIST_VALUES(wm_window_type, _NET_WM_WINDOW_TYPE, ATOM, atom)
+DO_LIST_VALUES(wm_window_type, _NET_WM_WINDOW_TYPE, XCB_ATOM_ATOM, atom)
 
 /**
  * _NET_WM_STATE
@@ -898,7 +910,7 @@ DO_LIST_VALUES(wm_window_type, _NET_WM_WINDOW_TYPE, ATOM, atom)
  * TODO: check possible atoms?
  */
 
-DO_LIST_VALUES(wm_state, _NET_WM_STATE, ATOM, atom)
+DO_LIST_VALUES(wm_state, _NET_WM_STATE, XCB_ATOM_ATOM, atom)
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
@@ -921,7 +933,7 @@ xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
  * TODO: check possible atoms?
  */
 
-DO_LIST_VALUES(wm_allowed_actions, _NET_WM_ALLOWED_ACTIONS, ATOM, atom)
+DO_LIST_VALUES(wm_allowed_actions, _NET_WM_ALLOWED_ACTIONS, XCB_ATOM_ATOM, atom)
 
 /**
  * _NET_WM_STRUT
@@ -936,8 +948,8 @@ xcb_ewmh_set_wm_strut(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_STRUT, CARDINAL, 32, countof(data),
-                             data);
+                             ewmh->_NET_WM_STRUT, XCB_ATOM_CARDINAL, 32,
+			     countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -949,11 +961,12 @@ xcb_ewmh_set_wm_strut_checked(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     window, ewmh->_NET_WM_STRUT, CARDINAL, 32,
-                                     countof(data), data);
+                                     window, ewmh->_NET_WM_STRUT,
+				     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
-DO_GET_PROPERTY(wm_strut, _NET_WM_STRUT, CARDINAL, 4)
+DO_GET_PROPERTY(wm_strut, _NET_WM_STRUT, XCB_ATOM_CARDINAL, 4)
 DO_REPLY_STRUCTURE(wm_strut, xcb_ewmh_get_extents_reply_t)
 
 /*
@@ -966,8 +979,8 @@ xcb_ewmh_set_wm_strut_partial(xcb_ewmh_connection_t *ewmh,
                               xcb_ewmh_wm_strut_partial_t wm_strut)
 {
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_STRUT_PARTIAL, CARDINAL, 32, 12,
-                             &wm_strut);
+                             ewmh->_NET_WM_STRUT_PARTIAL, XCB_ATOM_CARDINAL, 32,
+			     12, &wm_strut);
 }
 
 xcb_void_cookie_t
@@ -977,10 +990,10 @@ xcb_ewmh_set_wm_strut_partial_checked(xcb_ewmh_connection_t *ewmh,
 {
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_STRUT_PARTIAL,
-                                     CARDINAL, 32, 12, &wm_strut);
+                                     XCB_ATOM_CARDINAL, 32, 12, &wm_strut);
 }
 
-DO_GET_PROPERTY(wm_strut_partial, _NET_WM_STRUT_PARTIAL, CARDINAL, 12)
+DO_GET_PROPERTY(wm_strut_partial, _NET_WM_STRUT_PARTIAL, XCB_ATOM_CARDINAL, 12)
 DO_REPLY_STRUCTURE(wm_strut_partial, xcb_ewmh_wm_strut_partial_t)
 
 /**
@@ -997,7 +1010,8 @@ xcb_ewmh_set_wm_icon_geometry_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_ICON_GEOMETRY,
-                                     CARDINAL, 32, countof(data), data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
 xcb_void_cookie_t
@@ -1009,11 +1023,11 @@ xcb_ewmh_set_wm_icon_geometry(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_ICON_GEOMETRY, CARDINAL, 32,
+                             ewmh->_NET_WM_ICON_GEOMETRY, XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
-DO_GET_PROPERTY(wm_icon_geometry, _NET_WM_ICON_GEOMETRY, CARDINAL, 4)
+DO_GET_PROPERTY(wm_icon_geometry, _NET_WM_ICON_GEOMETRY, XCB_ATOM_CARDINAL, 4)
 DO_REPLY_STRUCTURE(wm_icon_geometry, xcb_ewmh_geometry_t)
 
 /**
@@ -1042,8 +1056,8 @@ xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
   set_wm_icon_data(data, width, height, img_len, img);
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     window, ewmh->_NET_WM_ICON, CARDINAL, 32,
-                                     data_len, data);
+                                     window, ewmh->_NET_WM_ICON,
+				     XCB_ATOM_CARDINAL, 32, data_len, data);
 }
 
 xcb_void_cookie_t
@@ -1058,16 +1072,17 @@ xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
   set_wm_icon_data(data, width, height, img_len, img);
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_ICON, CARDINAL, 32, data_len, data);
+                             ewmh->_NET_WM_ICON, XCB_ATOM_CARDINAL, 32,
+			     data_len, data);
 }
 
-DO_GET_PROPERTY(wm_icon, _NET_WM_ICON, CARDINAL, UINT_MAX)
+DO_GET_PROPERTY(wm_icon, _NET_WM_ICON, XCB_ATOM_CARDINAL, UINT_MAX)
 
 uint8_t
 xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
                                 xcb_get_property_reply_t *r)
 {
-  if(!r || r->type != CARDINAL || r->format != 32 ||
+  if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||
      xcb_get_property_value_length(r) <= (sizeof(uint32_t) * 2))
     return 0;
 
@@ -1105,25 +1120,27 @@ xcb_ewmh_get_wm_icon_reply_wipe(xcb_ewmh_get_wm_icon_reply_t *wm_icon)
  * _NET_WM_PID
  */
 
-DO_SINGLE_VALUE(wm_pid, _NET_WM_PID, CARDINAL, uint32_t)
+DO_SINGLE_VALUE(wm_pid, _NET_WM_PID, XCB_ATOM_CARDINAL, uint32_t)
 
 /**
  * _NET_WM_HANDLED_ICONS
  */
 
-DO_SINGLE_VALUE(wm_handled_icons, _NET_WM_HANDLED_ICONS, CARDINAL, uint32_t)
+DO_SINGLE_VALUE(wm_handled_icons, _NET_WM_HANDLED_ICONS, XCB_ATOM_CARDINAL,
+		uint32_t)
 
 /**
  * _NET_WM_USER_TIME
  */
 
-DO_SINGLE_VALUE(wm_user_time, _NET_WM_USER_TIME, CARDINAL, uint32_t)
+DO_SINGLE_VALUE(wm_user_time, _NET_WM_USER_TIME, XCB_ATOM_CARDINAL, uint32_t)
 
 /**
  * _NET_WM_USER_TIME_WINDOW
  */
 
-DO_SINGLE_VALUE(wm_user_time_window, _NET_WM_USER_TIME_WINDOW, CARDINAL, uint32_t)
+DO_SINGLE_VALUE(wm_user_time_window, _NET_WM_USER_TIME_WINDOW, XCB_ATOM_CARDINAL,
+		uint32_t)
 
 /**
  * _NET_FRAME_EXTENTS
@@ -1138,7 +1155,7 @@ xcb_ewmh_set_frame_extents(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_FRAME_EXTENTS, CARDINAL, 32,
+                             ewmh->_NET_FRAME_EXTENTS, XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
@@ -1151,11 +1168,12 @@ xcb_ewmh_set_frame_extents_checked(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { left, right, top, bottom };
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     window, ewmh->_NET_FRAME_EXTENTS, CARDINAL,
-                                     32, countof(data), data);
+                                     window, ewmh->_NET_FRAME_EXTENTS,
+				     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
-DO_GET_PROPERTY(frame_extents, _NET_FRAME_EXTENTS, CARDINAL, 4)
+DO_GET_PROPERTY(frame_extents, _NET_FRAME_EXTENTS, XCB_ATOM_CARDINAL, 4)
 DO_REPLY_STRUCTURE(frame_extents, xcb_ewmh_get_extents_reply_t)
 
 /**
@@ -1189,7 +1207,7 @@ xcb_ewmh_set_wm_sync_request_counter(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { low, high };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_SYNC_REQUEST, CARDINAL, 32,
+                             ewmh->_NET_WM_SYNC_REQUEST, XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
@@ -1203,17 +1221,19 @@ xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_SYNC_REQUEST,
-                                     CARDINAL, 32, countof(data), data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
-DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST, CARDINAL, 2)
+DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST,
+		XCB_ATOM_CARDINAL, 2)
 
 uint8_t
 xcb_ewmh_get_wm_sync_request_counter_from_reply(uint64_t *counter,
                                                 xcb_get_property_reply_t *r)
 {
   /* 2 cardinals? */
-  if(!r || r->type != CARDINAL || r->format != 32 ||
+  if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||
      xcb_get_property_value_length(r) != sizeof(uint64_t))
     return 0;
 
@@ -1263,8 +1283,8 @@ xcb_ewmh_set_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { top, bottom, left, right };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_FULLSCREEN_MONITORS, CARDINAL, 32,
-                             countof(data), data);
+                             ewmh->_NET_WM_FULLSCREEN_MONITORS,
+			     XCB_ATOM_CARDINAL, 32, countof(data), data);
 }
 
 xcb_void_cookie_t
@@ -1277,10 +1297,12 @@ xcb_ewmh_set_wm_fullscreen_monitors_checked(xcb_ewmh_connection_t *ewmh,
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
                                      window, ewmh->_NET_WM_FULLSCREEN_MONITORS,
-                                     CARDINAL, 32, countof(data), data);
+                                     XCB_ATOM_CARDINAL, 32, countof(data),
+				     data);
 }
 
-DO_GET_PROPERTY(wm_fullscreen_monitors, _NET_WM_FULLSCREEN_MONITORS, CARDINAL, 4)
+DO_GET_PROPERTY(wm_fullscreen_monitors, _NET_WM_FULLSCREEN_MONITORS,
+		XCB_ATOM_CARDINAL, 4)
 
 DO_REPLY_STRUCTURE(wm_fullscreen_monitors,
                    xcb_ewmh_get_wm_fullscreen_monitors_reply_t)
