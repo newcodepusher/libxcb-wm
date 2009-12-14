@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stddef.h>
 
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
@@ -48,10 +49,11 @@ typedef struct {
   uint8_t name_len;
   /** The Atom name string */
   char *name;
+  size_t m_offset;
 } ewmh_atom_t;
 
 define(`DO_ENTRY', `
-  { sizeof("$1") - 1, "$1" }ifelse(`$2', , , `,')')dnl
+  { sizeof("$1") - 1, "$1", offsetof(xcb_ewmh_connection_t, $1) }ifelse(`$2', , , `,')')dnl
 
 define(`DO', `DO_ENTRY(`$1', `$2')ifelse(`$2', , , `DO(shift($@))')')dnl
 
@@ -533,23 +535,20 @@ xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
                             xcb_intern_atom_cookie_t *ewmh_cookies,
                             xcb_generic_error_t **e)
 {
-  uint8_t i = 0;
+  uint8_t i, ret = 1;
   xcb_intern_atom_reply_t *reply;
 
-  define(`DO_ENTRY', `  if((reply = xcb_intern_atom_reply(ewmh->connection, ewmh_cookies[i++], e)) == NULL)
-    goto init_atoms_replies_error;
-  ewmh->$1 = reply->atom;
-  free(reply);
+  for(i = 0; i < NB_EWMH_ATOMS; i++)
+    if((reply = xcb_intern_atom_reply(ewmh->connection, ewmh_cookies[i], e)))
+      {
+	*((xcb_atom_t *) (((char *) ewmh) + ewmh_atoms[i].m_offset)) = reply->atom;
+	free(reply);
+      }
+    else
+      ret = 0;
 
-')dnl
-    include(atomlist.m4)dnl
-
-    free(ewmh_cookies);
-  return 1;
-
- init_atoms_replies_error:
   free(ewmh_cookies);
-  return 0;
+  return ret;
 }
 
 /**
