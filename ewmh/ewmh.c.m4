@@ -1234,7 +1234,7 @@ xcb_ewmh_get_wm_sync_request_counter_from_reply(uint64_t *counter,
     return 0;
 
   uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
-  *counter = (r_value[0] | r_value[1] << 32);
+  *counter = (r_value[0] | ((uint64_t) r_value[1]) << 32);
 
   return 1;
 }
