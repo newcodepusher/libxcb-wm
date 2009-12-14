@@ -62,7 +62,7 @@ define(`DO', `DO_ENTRY(`$1', `$2')ifelse(`$2', , , `DO(shift($@))')')dnl
  * its length
  */
 static ewmh_atom_t ewmh_atoms[] = {dnl
-                                   include(atomlist.m4)dnl
+  include(atomlist.m4)dnl
 };
 
 #define NB_EWMH_ATOMS countof(ewmh_atoms)

@@ -62,9 +62,9 @@ typedef struct {
   xcb_window_t root;
   /** The EWMH atoms of this connection */dnl
   define(`DO', `ifelse(`$1', , , `
-         xcb_atom_t $1;DO(shift($@))')')dnl
-    include(atomlist.m4)dnl
-    } xcb_ewmh_connection_t;
+  xcb_atom_t $1;DO(shift($@))')')dnl
+  include(atomlist.m4)dnl
+} xcb_ewmh_connection_t;
 
 /**
  * @brief Hold a GetProperty reply containing a list of Atoms
