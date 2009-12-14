@@ -833,7 +833,8 @@ xcb_ewmh_request_change_number_of_desktops(xcb_ewmh_connection_t *ewmh,
                                            uint32_t new_number_of_desktops)
 {
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-                                      ewmh->_NET_NUMBER_OF_DESKTOPS, 1,
+                                      ewmh->_NET_NUMBER_OF_DESKTOPS,
+                                      sizeof(new_number_of_desktops),
                                       &new_number_of_desktops);
 }
 
@@ -1545,7 +1546,8 @@ xcb_ewmh_request_change_showing_desktop(xcb_ewmh_connection_t *ewmh,
                                         uint32_t enter)
 {
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
-                                      ewmh->_NET_SHOWING_DESKTOP, 1, &enter);
+                                      ewmh->_NET_SHOWING_DESKTOP,
+                                      sizeof(enter), &enter);
 }
 
 xcb_void_cookie_t xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
