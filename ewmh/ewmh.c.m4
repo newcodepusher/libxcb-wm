@@ -491,6 +491,8 @@ xcb_ewmh_send_client_message(xcb_connection_t *c,
   ev.format = 32;
   ev.type = atom;
 
+  assert(data_len <= (5 * sizeof(uint32_t)));
+
   memcpy(ev.data.data32, data, data_len);
 
   return xcb_send_event(c, 0, dest, XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
