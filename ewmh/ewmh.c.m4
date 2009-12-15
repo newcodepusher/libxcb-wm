@@ -494,7 +494,7 @@ DO_REPLY_LIST_VALUES(atoms, XCB_ATOM_ATOM, xcb_atom_t)
 
 xcb_intern_atom_cookie_t *
 xcb_ewmh_init_atoms(xcb_connection_t *c,
-                    xcb_ewmh_connection_t * const ewmh,
+                    xcb_ewmh_connection_t *ewmh,
                     const int screen_nbr)
 {
   ewmh->connection = c;
@@ -531,7 +531,7 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
 }
 
 uint8_t
-xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
+xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t *ewmh,
                             xcb_intern_atom_cookie_t *ewmh_cookies,
                             xcb_generic_error_t **e)
 {

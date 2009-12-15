@@ -345,7 +345,7 @@ typedef struct {
  * @return The cookies corresponding to EWMH atoms
  */
 xcb_intern_atom_cookie_t *xcb_ewmh_init_atoms(xcb_connection_t *c,
-                                              xcb_ewmh_connection_t * const ewmh,
+                                              xcb_ewmh_connection_t *ewmh,
                                               const int screen_nbr);
 
 /**
@@ -357,7 +357,7 @@ xcb_intern_atom_cookie_t *xcb_ewmh_init_atoms(xcb_connection_t *c,
  * @param e Error if any
  * @return Return 1 on success, 0 otherwise
  */
-uint8_t xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t * const ewmh,
+uint8_t xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t *ewmh,
                                     xcb_intern_atom_cookie_t *ewmh_cookies,
                                     xcb_generic_error_t **e);
 
