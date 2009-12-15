@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: XCB EWMH library
 Description: XCB EWMH binding
 Version: @PACKAGE_VERSION@
-Requires: xcb xcb-proto xcb-aux
+Requires: xcb xcb-proto
 Libs: -L${libdir} -lxcb-ewmh @LIBS@
 Cflags: -I${includedir}

@@ -37,7 +37,6 @@
 #include <xcb/xproto.h>
 
 #include "xcb_ewmh.h"
-#include "xcb_aux.h"
 #include "../xcb-util-common.h"
 
 /**
@@ -90,16 +89,20 @@ static ewmh_atom_t ewmh_atoms[] = {dnl
 
 #define DO_GET_ROOT_PROPERTY(fname, property, atype, length)            \
   xcb_get_property_cookie_t                                             \
-  xcb_ewmh_get_##fname(xcb_ewmh_connection_t *ewmh)                     \
+  xcb_ewmh_get_##fname(xcb_ewmh_connection_t *ewmh,                     \
+                       int screen_nbr)                                  \
   {                                                                     \
-    return xcb_get_property(ewmh->connection, 0, ewmh->root,            \
+    return xcb_get_property(ewmh->connection, 0,                        \
+                            ewmh->screens[screen_nbr]->root,            \
                             ewmh->property, atype, 0, length);          \
   }                                                                     \
                                                                         \
   xcb_get_property_cookie_t                                             \
-  xcb_ewmh_get_##fname##_unchecked(xcb_ewmh_connection_t *ewmh)         \
+  xcb_ewmh_get_##fname##_unchecked(xcb_ewmh_connection_t *ewmh,         \
+                                   int screen_nbr)                      \
   {                                                                     \
-    return xcb_get_property_unchecked(ewmh->connection, 0, ewmh->root,  \
+    return xcb_get_property_unchecked(ewmh->connection, 0,              \
+                                      ewmh->screens[screen_nbr]->root,  \
                                       ewmh->property, atype, 0,         \
                                       length);                          \
   }
@@ -188,20 +191,24 @@ DO_REPLY_SINGLE_VALUE(cardinal, XCB_ATOM_CARDINAL, uint32_t)
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname##_checked(xcb_ewmh_connection_t *ewmh,           \
+                                 int screen_nbr,                        \
                                  ctype value)                           \
   {                                                                     \
     return xcb_change_property_checked(ewmh->connection,                \
                                        XCB_PROP_MODE_REPLACE,           \
-                                       ewmh->root, ewmh->property,      \
-                                       atype, 32, 1, &value);           \
+                                       ewmh->screens[screen_nbr]->root, \
+                                       ewmh->property, atype, 32, 1,    \
+                                       &value);                         \
   }                                                                     \
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname(xcb_ewmh_connection_t *ewmh,                     \
+                       int screen_nbr,                                  \
                        ctype value)                                     \
   {                                                                     \
     return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-                               ewmh->root, ewmh->property, atype,       \
+                               ewmh->screens[screen_nbr]->root,         \
+                               ewmh->property, atype,                   \
                                32, 1, &value);                          \
   }
 
@@ -268,24 +275,27 @@ DO_REPLY_SINGLE_VALUE(cardinal, XCB_ATOM_CARDINAL, uint32_t)
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname##_checked(xcb_ewmh_connection_t *ewmh,           \
+                                 int screen_nbr,                        \
                                  uint32_t list_len,                     \
                                  ctype *list)                           \
   {                                                                     \
     return xcb_change_property_checked(ewmh->connection,                \
                                        XCB_PROP_MODE_REPLACE,           \
-                                       ewmh->root, ewmh->property,      \
-                                       atype, 32,                       \
+                                       ewmh->screens[screen_nbr]->root, \
+                                       ewmh->property, atype, 32,       \
                                        list_len * (sizeof(ctype) >> 2), \
                                        list);                           \
   }                                                                     \
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname(xcb_ewmh_connection_t *ewmh,                     \
+                       int screen_nbr,                                  \
                        uint32_t list_len,                               \
                        ctype *list)                                     \
   {                                                                     \
     return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-                               ewmh->root, ewmh->property, atype, 32,   \
+                               ewmh->screens[screen_nbr]->root,         \
+                               ewmh->property, atype, 32,               \
                                list_len * (sizeof(ctype) >> 2),         \
                                list);                                   \
   }
@@ -410,23 +420,26 @@ xcb_ewmh_get_utf8_strings_reply_wipe(xcb_ewmh_get_utf8_strings_reply_t *data)
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname(xcb_ewmh_connection_t *ewmh,                     \
+                       int screen_nbr,                                  \
                        uint32_t strings_len,                            \
                        const char *strings)                             \
   {                                                                     \
     return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, \
-                               ewmh->root, ewmh->property,              \
-                               ewmh->UTF8_STRING, 8, strings_len,       \
-                               strings);                                \
+                               ewmh->screens[screen_nbr]->root,         \
+                               ewmh->property, ewmh->UTF8_STRING, 8,    \
+                               strings_len, strings);                   \
   }                                                                     \
                                                                         \
   xcb_void_cookie_t                                                     \
   xcb_ewmh_set_##fname##_checked(xcb_ewmh_connection_t *ewmh,           \
+                                 int screen_nbr,                        \
                                  uint32_t strings_len,                  \
                                  const char *strings)                   \
   {                                                                     \
     return xcb_change_property_checked(ewmh->connection,                \
                                        XCB_PROP_MODE_REPLACE,           \
-                                       ewmh->root, ewmh->property,      \
+                                       ewmh->screens[screen_nbr]->root, \
+                                       ewmh->property,                  \
                                        ewmh->UTF8_STRING, 8,            \
                                        strings_len, strings);           \
   }
@@ -494,37 +507,53 @@ DO_REPLY_LIST_VALUES(atoms, XCB_ATOM_ATOM, xcb_atom_t)
 
 xcb_intern_atom_cookie_t *
 xcb_ewmh_init_atoms(xcb_connection_t *c,
-                    xcb_ewmh_connection_t *ewmh,
-                    const int screen_nbr)
+                    xcb_ewmh_connection_t *ewmh)
 {
+  int screen_nbr, atom_nbr;
+
   ewmh->connection = c;
 
-  xcb_screen_t *screen = xcb_aux_get_screen(ewmh->connection, screen_nbr);
-  if(!screen)
+  xcb_screen_iterator_t screen_iter = xcb_setup_roots_iterator(xcb_get_setup(c));
+  xcb_screen_iterator_t iter;
+
+  for(iter = screen_iter; iter.rem; xcb_screen_next(&iter))
+    ewmh->nb_screens++;
+
+  if(!ewmh->nb_screens)
     return NULL;
 
-  /* Compute _NET_WM_CM_Sn according to the screen number 'n' */
-  char wm_cm_sn[32];
-  const int wm_cm_sn_len = snprintf(wm_cm_sn, 32, "_NET_WM_CM_S%d",
-                                    screen_nbr);
+  /* Allocate the data structures depending of the number of screens */
+  ewmh->screens = malloc(sizeof(xcb_screen_t *) * ewmh->nb_screens);
+  ewmh->_NET_WM_CM_Sn = malloc(sizeof(xcb_atom_t) * ewmh->nb_screens);
 
-  assert(wm_cm_sn_len > 0 && wm_cm_sn_len < 32);
+  for(iter = screen_iter, screen_nbr = 0; iter.rem; xcb_screen_next(&iter))
+    ewmh->screens[screen_nbr++] = iter.data;
 
-  ewmh->root = screen->root;
-
+  /* _NET_WM_CM_Sn atoms  will be treated differently,  by adding them
+     at the end  of this array, than other atoms as  it depends on the
+     number of screens */
   xcb_intern_atom_cookie_t *ewmh_cookies = malloc(sizeof(xcb_intern_atom_cookie_t) *
-                                                  NB_EWMH_ATOMS);
+                                                  (NB_EWMH_ATOMS + ewmh->nb_screens));
 
-  uint8_t i;
-  for(i = 0; i < NB_EWMH_ATOMS; i++)
+  /* First, send InternAtom request for all Atoms except _NET_WM_CM_Sn */
+  for(atom_nbr = 0; atom_nbr < NB_EWMH_ATOMS; atom_nbr++)
+    ewmh_cookies[atom_nbr] = xcb_intern_atom(ewmh->connection, 0,
+					     ewmh_atoms[atom_nbr].name_len,
+					     ewmh_atoms[atom_nbr].name);
+
+  /* Then,  send  InternAtom requests  for  _NET_WM_CM_Sn and  compute
+     _NET_WM_CM_Sn according to the screen number 'n' */
+  char wm_cm_sn[ewmh->nb_screens][32];
+  for(screen_nbr = 0; screen_nbr < ewmh->nb_screens; screen_nbr++)
     {
-      if(strcmp(ewmh_atoms[i].name, "_NET_WM_CM_Sn") == 0)
-        ewmh_cookies[i] = xcb_intern_atom(ewmh->connection, 0,
-                                          wm_cm_sn_len, wm_cm_sn);
-      else
-        ewmh_cookies[i] = xcb_intern_atom(ewmh->connection, 0,
-                                          ewmh_atoms[i].name_len,
-                                          ewmh_atoms[i].name);
+      const int wm_cm_sn_len = snprintf(wm_cm_sn[screen_nbr], 32,
+					"_NET_WM_CM_S%d", screen_nbr);
+
+      assert(wm_cm_sn_len > 0 && wm_cm_sn_len < 32);
+
+      ewmh_cookies[atom_nbr++] = xcb_intern_atom(ewmh->connection, 0,
+						 wm_cm_sn_len,
+						 wm_cm_sn[screen_nbr]);
     }
 
   return ewmh_cookies;
@@ -535,17 +564,29 @@ xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t *ewmh,
                             xcb_intern_atom_cookie_t *ewmh_cookies,
                             xcb_generic_error_t **e)
 {
-  uint8_t i, ret = 1;
+  int atom_nbr;
+  int screen_nbr = 0;
+  uint8_t ret = 1;
   xcb_intern_atom_reply_t *reply;
 
-  for(i = 0; i < NB_EWMH_ATOMS; i++)
-    if((reply = xcb_intern_atom_reply(ewmh->connection, ewmh_cookies[i], e)))
+  for(atom_nbr = 0; atom_nbr < NB_EWMH_ATOMS + ewmh->nb_screens; atom_nbr++)
+    if((reply = xcb_intern_atom_reply(ewmh->connection, ewmh_cookies[atom_nbr], e)))
       {
-	*((xcb_atom_t *) (((char *) ewmh) + ewmh_atoms[i].m_offset)) = reply->atom;
+	if(ret)
+	  {
+	    if(atom_nbr < NB_EWMH_ATOMS)
+	      *((xcb_atom_t *) (((char *) ewmh) + ewmh_atoms[atom_nbr].m_offset)) = reply->atom;
+	    else
+	      ewmh->_NET_WM_CM_Sn[screen_nbr++] = reply->atom;
+	  }
+
 	free(reply);
       }
     else
       ret = 0;
+
+  if(!ret)
+    xcb_ewmh_connection_wipe(ewmh);
 
   free(ewmh_cookies);
   return ret;
@@ -582,34 +623,39 @@ DO_GET_ROOT_PROPERTY(desktop_geometry, _NET_DESKTOP_GEOMETRY,
                      XCB_ATOM_CARDINAL, 2L)
 
 xcb_void_cookie_t
-xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_set_desktop_geometry(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                               uint32_t new_width, uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
 
-  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,
+                             ewmh->screens[screen_nbr]->root,
                              ewmh->_NET_DESKTOP_GEOMETRY, XCB_ATOM_CARDINAL,
                              32, 2, data);
 }
 
 xcb_void_cookie_t
 xcb_ewmh_set_desktop_geometry_checked(xcb_ewmh_connection_t *ewmh,
-                                      uint32_t new_width, uint32_t new_height)
+                                      int screen_nbr, uint32_t new_width,
+                                      uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     ewmh->root, ewmh->_NET_DESKTOP_GEOMETRY,
+                                     ewmh->screens[screen_nbr]->root,
+                                     ewmh->_NET_DESKTOP_GEOMETRY,
                                      XCB_ATOM_CARDINAL, 32, 2, data);
 }
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_geometry(xcb_ewmh_connection_t *ewmh,
-                                         uint32_t new_width, uint32_t new_height)
+                                         int screen_nbr, uint32_t new_width,
+                                         uint32_t new_height)
 {
   const uint32_t data[] = { new_width, new_height };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_DESKTOP_GEOMETRY,
                                       sizeof(data), data);
 }
@@ -654,11 +700,13 @@ DO_REPLY_LIST_VALUES(desktop_viewport, XCB_ATOM_CARDINAL,
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_desktop_viewport(xcb_ewmh_connection_t *ewmh,
-                                         uint32_t x, uint32_t y)
+                                         int screen_nbr, uint32_t x,
+                                         uint32_t y)
 {
   const uint32_t data[] = { x, y };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_DESKTOP_VIEWPORT,
                                       sizeof(data), data);
 }
@@ -672,12 +720,13 @@ DO_ROOT_SINGLE_VALUE(current_desktop, _NET_CURRENT_DESKTOP, XCB_ATOM_CARDINAL,
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_current_desktop(xcb_ewmh_connection_t *ewmh,
-                                        uint32_t new_desktop,
+                                        int screen_nbr, uint32_t new_desktop,
                                         xcb_timestamp_t timestamp)
 {
   const uint32_t data[] = { new_desktop, timestamp };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE, ewmh->root,
+  return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_CURRENT_DESKTOP,
                                       sizeof(data), data);
 }
@@ -696,6 +745,7 @@ DO_ROOT_SINGLE_VALUE(active_window, _NET_ACTIVE_WINDOW, XCB_ATOM_WINDOW,
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
+                                      int screen_nbr,
                                       xcb_window_t window_to_activate,
                                       xcb_ewmh_client_source_type_t source_indication,
                                       xcb_timestamp_t timestamp,
@@ -704,8 +754,9 @@ xcb_ewmh_request_change_active_window(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { source_indication, timestamp, current_active_window };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window_to_activate,
-                                      ewmh->root, ewmh->_NET_ACTIVE_WINDOW,
-                                      sizeof(data), data);
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_ACTIVE_WINDOW, sizeof(data),
+                                      data);
 }
 
 /**
@@ -739,20 +790,21 @@ DO_GET_ROOT_PROPERTY(desktop_layout, _NET_DESKTOP_LAYOUT, XCB_ATOM_CARDINAL, 4)
 DO_REPLY_STRUCTURE(desktop_layout, xcb_ewmh_get_desktop_layout_reply_t)
 
 xcb_void_cookie_t
-xcb_ewmh_set_desktop_layout(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_set_desktop_layout(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                             xcb_ewmh_desktop_layout_orientation_t orientation,
                             uint32_t columns, uint32_t rows,
                             xcb_ewmh_desktop_layout_starting_corner_t starting_corner)
 {
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
 
-  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, ewmh->root,
+  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE,
+                             ewmh->screens[screen_nbr]->root,
                              ewmh->_NET_DESKTOP_LAYOUT, XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
 xcb_void_cookie_t
-xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                     xcb_ewmh_desktop_layout_orientation_t orientation,
                                     uint32_t columns, uint32_t rows,
                                     xcb_ewmh_desktop_layout_starting_corner_t starting_corner)
@@ -760,7 +812,8 @@ xcb_ewmh_set_desktop_layout_checked(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { orientation, columns, rows, starting_corner };
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     ewmh->root, ewmh->_NET_DESKTOP_LAYOUT,
+                                     ewmh->screens[screen_nbr]->root,
+                                     ewmh->_NET_DESKTOP_LAYOUT,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
                                      data);
 }
@@ -777,7 +830,7 @@ DO_ROOT_SINGLE_VALUE(showing_desktop, _NET_SHOWING_DESKTOP, XCB_ATOM_CARDINAL,
  */
 
 xcb_void_cookie_t
-xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                               xcb_window_t window_to_close,
                               xcb_timestamp_t timestamp,
                               xcb_ewmh_client_source_type_t source_indication)
@@ -785,8 +838,9 @@ xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { timestamp, source_indication };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window_to_close,
-                                      ewmh->root, ewmh->_NET_CLOSE_WINDOW,
-                                      sizeof(data), data);
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_CLOSE_WINDOW, sizeof(data),
+                                      data);
 }
 
 /**
@@ -795,7 +849,7 @@ xcb_ewmh_request_close_window(xcb_ewmh_connection_t *ewmh,
 
 /* x, y, width, height may be equal to -1 */
 xcb_void_cookie_t
-xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                    xcb_window_t moveresize_window,
                                    xcb_gravity_t gravity,
                                    xcb_ewmh_client_source_type_t source_indication,
@@ -807,7 +861,8 @@ xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
                             x, y, width, height };
 
   return xcb_ewmh_send_client_message(ewmh->connection, moveresize_window,
-                                      ewmh->root, ewmh->_NET_MOVERESIZE_WINDOW,
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_MOVERESIZE_WINDOW,
                                       sizeof(data), data);
 }
 
@@ -816,7 +871,7 @@ xcb_ewmh_request_moveresize_window(xcb_ewmh_connection_t *ewmh,
  */
 
 xcb_void_cookie_t
-xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                xcb_window_t moveresize_window,
                                uint32_t x_root, uint32_t y_root,
                                xcb_ewmh_moveresize_direction_t direction,
@@ -826,8 +881,9 @@ xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { x_root, y_root, direction, button, source_indication };
 
   return xcb_ewmh_send_client_message(ewmh->connection, moveresize_window,
-                                      ewmh->root, ewmh->_NET_WM_MOVERESIZE,
-                                      sizeof(data), data);
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_WM_MOVERESIZE, sizeof(data),
+                                      data);
 }
 
 /**
@@ -835,7 +891,7 @@ xcb_ewmh_request_wm_moveresize(xcb_ewmh_connection_t *ewmh,
  */
 
 xcb_void_cookie_t
-xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                 xcb_window_t window_to_restack,
                                 xcb_window_t sibling_window,
                                 xcb_stack_mode_t detail)
@@ -844,8 +900,9 @@ xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
                             detail };
 
   return xcb_ewmh_send_client_message(ewmh->connection, window_to_restack,
-                                      ewmh->root, ewmh->_NET_RESTACK_WINDOW,
-                                      sizeof(data), data);
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_RESTACK_WINDOW, sizeof(data),
+                                      data);
 }
 
 /**
@@ -879,7 +936,7 @@ DO_UTF8_STRING(wm_visible_icon_name, _NET_WM_VISIBLE_ICON_NAME)
 DO_SINGLE_VALUE(wm_desktop, _NET_WM_DESKTOP, XCB_ATOM_CARDINAL, uint32_t)
 
 xcb_void_cookie_t
-xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                    xcb_window_t client_window,
                                    uint32_t new_desktop,
                                    xcb_ewmh_client_source_type_t source_indication)
@@ -887,8 +944,9 @@ xcb_ewmh_request_change_wm_desktop(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { new_desktop, source_indication };
 
   return xcb_ewmh_send_client_message(ewmh->connection, client_window,
-                                      ewmh->root, ewmh->_NET_WM_DESKTOP,
-                                      sizeof(data), data);
+                                      ewmh->screens[screen_nbr]->root,
+                                      ewmh->_NET_WM_DESKTOP, sizeof(data),
+                                      data);
 }
 
 /**
@@ -908,7 +966,7 @@ DO_LIST_VALUES(wm_window_type, _NET_WM_WINDOW_TYPE, XCB_ATOM_ATOM, atom)
 DO_LIST_VALUES(wm_state, _NET_WM_STATE, XCB_ATOM_ATOM, atom)
 
 xcb_void_cookie_t
-xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
+xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh, int screen_nbr,
                                  xcb_window_t client_window,
                                  xcb_ewmh_wm_state_action_t action,
                                  xcb_atom_t first_property,
@@ -918,7 +976,8 @@ xcb_ewmh_request_change_wm_state(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { action, first_property, second_property,
                             source_indication };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, client_window, ewmh->root,
+  return xcb_ewmh_send_client_message(ewmh->connection, client_window,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_WM_STATE, sizeof(data), data);
 }
 
@@ -1305,6 +1364,7 @@ DO_REPLY_STRUCTURE(wm_fullscreen_monitors,
 
 xcb_void_cookie_t
 xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
+                                               int screen_nbr,
                                                xcb_window_t window,
                                                uint32_t top, uint32_t bottom,
                                                uint32_t left, uint32_t right,
@@ -1312,7 +1372,8 @@ xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
 {
   const uint32_t data[] = { top, bottom, left, right, source_indication };
 
-  return xcb_ewmh_send_client_message(ewmh->connection, window, ewmh->root,
+  return xcb_ewmh_send_client_message(ewmh->connection, window,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_WM_FULLSCREEN_MONITORS,
                                       sizeof(data), data);
 }
@@ -1326,16 +1387,19 @@ xcb_ewmh_request_change_wm_fullscreen_monitors(xcb_ewmh_connection_t *ewmh,
  */
 
 xcb_get_selection_owner_cookie_t
-xcb_ewmh_get_wm_cm_owner(xcb_ewmh_connection_t *ewmh)
+xcb_ewmh_get_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
+                         int screen_nbr)
 {
-  return xcb_get_selection_owner(ewmh->connection, ewmh->_NET_WM_CM_Sn);
+  return xcb_get_selection_owner(ewmh->connection,
+                                 ewmh->_NET_WM_CM_Sn[screen_nbr]);
 }
 
 xcb_get_selection_owner_cookie_t
-xcb_ewmh_get_wm_cm_owner_unchecked(xcb_ewmh_connection_t *ewmh)
+xcb_ewmh_get_wm_cm_owner_unchecked(xcb_ewmh_connection_t *ewmh,
+                                   int screen_nbr)
 {
   return xcb_get_selection_owner_unchecked(ewmh->connection,
-                                           ewmh->_NET_WM_CM_Sn);
+                                           ewmh->_NET_WM_CM_Sn[screen_nbr]);
 }
 
 uint8_t
@@ -1365,6 +1429,7 @@ xcb_ewmh_get_wm_cm_owner_reply(xcb_ewmh_connection_t *ewmh,
 /* TODO: section 2.1, 2.2 */
 static xcb_void_cookie_t
 set_wm_cm_owner_client_message(xcb_ewmh_connection_t *ewmh,
+                               int screen_nbr,
                                xcb_window_t owner,
                                xcb_timestamp_t timestamp,
                                uint32_t selection_data1,
@@ -1377,12 +1442,12 @@ set_wm_cm_owner_client_message(xcb_ewmh_connection_t *ewmh,
   ev.format = 32;
   ev.type = ewmh->MANAGER;
   ev.data.data32[0] = timestamp;
-  ev.data.data32[1] = ewmh->_NET_WM_CM_Sn;
+  ev.data.data32[1] = ewmh->_NET_WM_CM_Sn[screen_nbr];
   ev.data.data32[2] = owner;
   ev.data.data32[3] = selection_data1;
   ev.data.data32[4] = selection_data2;
 
-  return xcb_send_event(ewmh->connection, 0, ewmh->root,
+  return xcb_send_event(ewmh->connection, 0, ewmh->screens[screen_nbr]->root,
                         XCB_EVENT_MASK_STRUCTURE_NOTIFY,
                         (char *) &ev);
 }
@@ -1390,27 +1455,30 @@ set_wm_cm_owner_client_message(xcb_ewmh_connection_t *ewmh,
 /* TODO: check both */
 xcb_void_cookie_t
 xcb_ewmh_set_wm_cm_owner(xcb_ewmh_connection_t *ewmh,
+                         int screen_nbr,
                          xcb_window_t owner,
                          xcb_timestamp_t timestamp,
                          uint32_t selection_data1,
                          uint32_t selection_data2)
 {
-  xcb_set_selection_owner(ewmh->connection, owner, ewmh->_NET_WM_CM_Sn, 0);
+  xcb_set_selection_owner(ewmh->connection, owner,
+                          ewmh->_NET_WM_CM_Sn[screen_nbr], 0);
 
-  return set_wm_cm_owner_client_message(ewmh, owner, timestamp,
+  return set_wm_cm_owner_client_message(ewmh, screen_nbr, owner, timestamp,
                                         selection_data1, selection_data2);
 }
 
 xcb_void_cookie_t
 xcb_ewmh_set_wm_cm_owner_checked(xcb_ewmh_connection_t *ewmh,
+                                 int screen_nbr,
                                  xcb_window_t owner,
                                  xcb_timestamp_t timestamp,
                                  uint32_t selection_data1,
                                  uint32_t selection_data2)
 {
   xcb_set_selection_owner_checked(ewmh->connection, owner,
-                                  ewmh->_NET_WM_CM_Sn, 0);
+                                  ewmh->_NET_WM_CM_Sn[screen_nbr], 0);
 
-  return set_wm_cm_owner_client_message(ewmh, owner, timestamp,
+  return set_wm_cm_owner_client_message(ewmh, screen_nbr, owner, timestamp,
                                         selection_data1, selection_data2);
 }
