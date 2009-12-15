@@ -1189,7 +1189,7 @@ xcb_ewmh_send_wm_ping(xcb_ewmh_connection_t *ewmh,
 }
 
 /**
- * _NET_WM_SYNC_REQUES
+ * _NET_WM_SYNC_REQUEST
  * _NET_WM_SYNC_REQUEST_COUNTER
  */
 
@@ -1202,7 +1202,8 @@ xcb_ewmh_set_wm_sync_request_counter(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { low, high };
 
   return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_SYNC_REQUEST, XCB_ATOM_CARDINAL, 32,
+                             ewmh->_NET_WM_SYNC_REQUEST_COUNTER,
+                             XCB_ATOM_CARDINAL, 32,
                              countof(data), data);
 }
 
@@ -1215,12 +1216,12 @@ xcb_ewmh_set_wm_sync_request_counter_checked(xcb_ewmh_connection_t *ewmh,
   const uint32_t data[] = { low, high };
 
   return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     window, ewmh->_NET_WM_SYNC_REQUEST,
+                                     window, ewmh->_NET_WM_SYNC_REQUEST_COUNTER,
                                      XCB_ATOM_CARDINAL, 32, countof(data),
                                      data);
 }
 
-DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST,
+DO_GET_PROPERTY(wm_sync_request_counter, _NET_WM_SYNC_REQUEST_COUNTER,
                 XCB_ATOM_CARDINAL, 2)
 
 uint8_t
