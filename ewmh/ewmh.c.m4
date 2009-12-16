@@ -544,17 +544,18 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
 
   /* Then,  send  InternAtom requests  for  _NET_WM_CM_Sn and  compute
      _NET_WM_CM_Sn according to the screen number 'n' */
-  char wm_cm_sn[ewmh->nb_screens][32];
   for(screen_nbr = 0; screen_nbr < ewmh->nb_screens; screen_nbr++)
     {
-      const int wm_cm_sn_len = snprintf(wm_cm_sn[screen_nbr], 32,
-					"_NET_WM_CM_S%d", screen_nbr);
+      char wm_cm_sn[32];
+
+      const int wm_cm_sn_len = snprintf(wm_cm_sn, 32, "_NET_WM_CM_S%d",
+					screen_nbr);
 
       assert(wm_cm_sn_len > 0 && wm_cm_sn_len < 32);
 
       ewmh_cookies[atom_nbr++] = xcb_intern_atom(ewmh->connection, 0,
 						 wm_cm_sn_len,
-						 wm_cm_sn[screen_nbr]);
+						 wm_cm_sn);
     }
 
   return ewmh_cookies;
