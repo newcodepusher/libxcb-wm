@@ -515,12 +515,9 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
 
   ewmh->connection = c;
 
-  xcb_screen_iterator_t screen_iter = xcb_setup_roots_iterator(xcb_get_setup(c));
-  xcb_screen_iterator_t iter;
+  const xcb_setup_t *setup = xcb_get_setup(c);
 
-  for(iter = screen_iter; iter.rem; xcb_screen_next(&iter))
-    ewmh->nb_screens++;
-
+  ewmh->nb_screens = xcb_setup_roots_length(setup);
   if(!ewmh->nb_screens)
     return NULL;
 
@@ -528,8 +525,10 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
   ewmh->screens = malloc(sizeof(xcb_screen_t *) * ewmh->nb_screens);
   ewmh->_NET_WM_CM_Sn = malloc(sizeof(xcb_atom_t) * ewmh->nb_screens);
 
-  for(iter = screen_iter, screen_nbr = 0; iter.rem; xcb_screen_next(&iter))
-    ewmh->screens[screen_nbr++] = iter.data;
+  xcb_screen_iterator_t screen_iter = xcb_setup_roots_iterator(setup);
+  for(screen_iter = xcb_setup_roots_iterator(setup), screen_nbr = 0; screen_iter.rem;
+      xcb_screen_next(&screen_iter))
+    ewmh->screens[screen_nbr++] = screen_iter.data;
 
   /* _NET_WM_CM_Sn atoms  will be treated differently,  by adding them
      at the end  of this array, than other atoms as  it depends on the
