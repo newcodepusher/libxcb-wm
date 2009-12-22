@@ -1703,10 +1703,11 @@ xcb_ewmh_get_wm_name_from_reply(xcb_ewmh_connection_t *ewmh,
   return xcb_ewmh_get_utf8_strings_from_reply(ewmh, data, r);
 }
 
-uint8_t  xcb_ewmh_get_wm_name_reply(xcb_ewmh_connection_t *ewmh,
-                                    xcb_get_property_cookie_t cookie,
-                                    xcb_ewmh_get_utf8_strings_reply_t *data,
-                                    xcb_generic_error_t **e)
+static inline uint8_t
+xcb_ewmh_get_wm_name_reply(xcb_ewmh_connection_t *ewmh,
+                           xcb_get_property_cookie_t cookie,
+                           xcb_ewmh_get_utf8_strings_reply_t *data,
+                           xcb_generic_error_t **e)
 {
   return xcb_ewmh_get_utf8_strings_reply(ewmh, cookie, data, e);
 }
