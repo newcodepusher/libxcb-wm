@@ -26,6 +26,9 @@
  * prior written authorization from the authors.
  */
 
+#include "xcb_ewmh.h"
+#include "../xcb-util-common.h"
+
 #include <string.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -35,9 +38,6 @@
 
 #include <xcb/xcb.h>
 #include <xcb/xproto.h>
-
-#include "xcb_ewmh.h"
-#include "../xcb-util-common.h"
 
 /**
  * @brief The  structure used  on screen initialization  including the
