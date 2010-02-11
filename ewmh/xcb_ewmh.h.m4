@@ -2087,7 +2087,7 @@ xcb_ewmh_get_wm_handled_icons_reply(xcb_ewmh_connection_t *ewmh,
 
 xcb_void_cookie_t xcb_ewmh_set_wm_user_time(xcb_ewmh_connection_t *ewmh,
                                             xcb_window_t window,
-                                            uint32_t time);
+                                            uint32_t xtime);
 
 xcb_void_cookie_t xcb_ewmh_set_wm_user_time_checked(xcb_ewmh_connection_t *ewmh,
                                                     xcb_window_t window,
@@ -2100,24 +2100,24 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_user_time(xcb_ewmh_connection_t *ewmh,
                                                     xcb_window_t window);
 
 static inline uint8_t
-xcb_ewmh_get_wm_user_time_from_reply(uint32_t *time,
+xcb_ewmh_get_wm_user_time_from_reply(uint32_t *xtime,
                                      xcb_get_property_reply_t *r)
 {
-  return xcb_ewmh_get_cardinal_from_reply(time, r);
+  return xcb_ewmh_get_cardinal_from_reply(xtime, r);
 }
 
 static inline uint8_t
 xcb_ewmh_get_wm_user_time_reply(xcb_ewmh_connection_t *ewmh,
                                 xcb_get_property_cookie_t cookie,
-                                uint32_t *time,
+                                uint32_t *xtime,
                                 xcb_generic_error_t **e)
 {
-  return xcb_ewmh_get_cardinal_reply(ewmh, cookie, time, e);
+  return xcb_ewmh_get_cardinal_reply(ewmh, cookie, xtime, e);
 }
 
 xcb_void_cookie_t xcb_ewmh_set_wm_user_time_window(xcb_ewmh_connection_t *ewmh,
                                                    xcb_window_t window,
-                                                   uint32_t time);
+                                                   uint32_t xtime);
 
 xcb_void_cookie_t xcb_ewmh_set_wm_user_time_window_checked(xcb_ewmh_connection_t *ewmh,
                                                            xcb_window_t window,
@@ -2130,19 +2130,19 @@ xcb_get_property_cookie_t xcb_ewmh_get_wm_user_time_window(xcb_ewmh_connection_t
                                                            xcb_window_t window);
 
 static inline uint8_t
-xcb_ewmh_get_wm_user_time_window_from_reply(uint32_t *time,
+xcb_ewmh_get_wm_user_time_window_from_reply(uint32_t *xtime,
                                             xcb_get_property_reply_t *r)
 {
-  return xcb_ewmh_get_cardinal_from_reply(time, r);
+  return xcb_ewmh_get_cardinal_from_reply(xtime, r);
 }
 
 static inline uint8_t
 xcb_ewmh_get_wm_user_time_window_reply(xcb_ewmh_connection_t *ewmh,
                                        xcb_get_property_cookie_t cookie,
-                                       uint32_t *time,
+                                       uint32_t *xtime,
                                        xcb_generic_error_t **e)
 {
-  return xcb_ewmh_get_cardinal_reply(ewmh, cookie, time, e);
+  return xcb_ewmh_get_cardinal_reply(ewmh, cookie, xtime, e);
 }
 
 xcb_void_cookie_t xcb_ewmh_set_frame_extents(xcb_ewmh_connection_t *ewmh,
