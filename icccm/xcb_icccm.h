@@ -49,18 +49,18 @@ extern "C" {
  * @brief TextProperty reply structure.
  */
 typedef struct {
-  /** Store reply to avoid memory allocation, should normally not be
-      used directly */
-  xcb_get_property_reply_t *_reply;
-  /** Encoding used */
-  xcb_atom_t encoding;
-  /** Length of the name field above */
-  uint32_t name_len;
-  /** Property value */
-  char *name;
-  /** Format, may be 8, 16 or 32 */
-  uint8_t format;
-} xcb_get_text_property_reply_t;
+/** Store reply to avoid memory allocation, should normally not be
+    used directly */
+xcb_get_property_reply_t *_reply;
+/** Encoding used */
+xcb_atom_t encoding;
+/** Length of the name field above */
+uint32_t name_len;
+/** Property value */
+char *name;
+/** Format, may be 8, 16 or 32 */
+uint8_t format;
+} xcb_icccm_get_text_property_reply_t;
 
 /**
  * @brief Deliver a GetProperty request to the X server.
@@ -72,16 +72,16 @@ typedef struct {
  * Allow to get a window property, in most case you might want to use
  * above functions to get an ICCCM property for a given window.
  */
-xcb_get_property_cookie_t xcb_get_text_property(xcb_connection_t *c,
-                                                xcb_window_t window,
-                                                xcb_atom_t property);
+xcb_get_property_cookie_t xcb_icccm_get_text_property(xcb_connection_t *c,
+                                                        xcb_window_t window,
+                                                        xcb_atom_t property);
 
 /**
- * @see xcb_get_text_property()
+ * @see xcb_icccm_get_text_property()
  */
-xcb_get_property_cookie_t xcb_get_text_property_unchecked(xcb_connection_t *c,
-                                                          xcb_window_t window,
-                                                          xcb_atom_t property);
+xcb_get_property_cookie_t xcb_icccm_get_text_property_unchecked(xcb_connection_t *c,
+                                                                  xcb_window_t window,
+                                                                  xcb_atom_t property);
 
 /**
  * @brief Fill given structure with the property value of a window.
@@ -95,21 +95,21 @@ xcb_get_property_cookie_t xcb_get_text_property_unchecked(xcb_connection_t *c,
  * therefore the structure must not be wiped.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_text_property_unchecked() is used.  Otherwise, it stores
+ * xcb_icccm_get_text_property_unchecked() is used.  Otherwise, it stores
  * the error if any.  prop structure members should be freed by
- * xcb_get_text_property_reply_wipe().
+ * xcb_icccm_get_text_property_reply_wipe().
  */
-uint8_t xcb_get_text_property_reply(xcb_connection_t *c,
-                                    xcb_get_property_cookie_t cookie,
-                                    xcb_get_text_property_reply_t *prop,
-                                    xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_text_property_reply(xcb_connection_t *c,
+                                            xcb_get_property_cookie_t cookie,
+                                            xcb_icccm_get_text_property_reply_t *prop,
+                                            xcb_generic_error_t **e);
 
 /**
  * @brief Wipe prop structure members previously allocated by
- *        xcb_get_text_property_reply().
+ *        xcb_icccm_get_text_property_reply().
  * @param prop prop structure whose members is going to be freed.
  */
-void xcb_get_text_property_reply_wipe(xcb_get_text_property_reply_t *prop);
+void xcb_icccm_get_text_property_reply_wipe(xcb_icccm_get_text_property_reply_t *prop);
 
 /* WM_NAME */
 
@@ -122,19 +122,19 @@ void xcb_get_text_property_reply_wipe(xcb_get_text_property_reply_t *prop);
  * @param name_len Length of name value to set.
  * @param name Name value to set.
  */
-xcb_void_cookie_t xcb_set_wm_name_checked(xcb_connection_t *c,
-                                          xcb_window_t window,
-                                          xcb_atom_t encoding,
-                                          uint8_t format,
-                                          uint32_t name_len,
-                                          const char *name);
+xcb_void_cookie_t xcb_icccm_set_wm_name_checked(xcb_connection_t *c,
+                                                  xcb_window_t window,
+                                                  xcb_atom_t encoding,
+                                                  uint8_t format,
+                                                  uint32_t name_len,
+                                                  const char *name);
 
 /**
- * @see xcb_set_wm_name_checked()
+ * @see xcb_icccm_set_wm_name_checked()
  */
-xcb_void_cookie_t xcb_set_wm_name(xcb_connection_t *c, xcb_window_t window,
-                                  xcb_atom_t encoding, uint8_t format,
-                                  uint32_t name_len, const char *name);
+xcb_void_cookie_t xcb_icccm_set_wm_name(xcb_connection_t *c, xcb_window_t window,
+                                          xcb_atom_t encoding, uint8_t format,
+                                          uint32_t name_len, const char *name);
 
 /**
  * @brief Deliver a GetProperty request to the X server for WM_NAME.
@@ -142,14 +142,14 @@ xcb_void_cookie_t xcb_set_wm_name(xcb_connection_t *c, xcb_window_t window,
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_name(xcb_connection_t *c,
-                                          xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_name(xcb_connection_t *c,
+                                                  xcb_window_t window);
 
 /**
- * @see xcb_get_wm_name()
+ * @see xcb_icccm_get_wm_name()
  */
-xcb_get_property_cookie_t xcb_get_wm_name_unchecked(xcb_connection_t *c,
-                                                    xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_name_unchecked(xcb_connection_t *c,
+                                                            xcb_window_t window);
 
 /**
  * @brief Fill given structure with the WM_NAME property of a window.
@@ -157,13 +157,13 @@ xcb_get_property_cookie_t xcb_get_wm_name_unchecked(xcb_connection_t *c,
  * @param cookie Request cookie.
  * @param prop WM_NAME property value.
  * @param e Error if any.
- * @see xcb_get_text_property_reply()
+ * @see xcb_icccm_get_text_property_reply()
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_get_wm_name_reply(xcb_connection_t *c,
-                              xcb_get_property_cookie_t cookie,
-                              xcb_get_text_property_reply_t *prop,
-                              xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_name_reply(xcb_connection_t *c,
+                                      xcb_get_property_cookie_t cookie,
+                                      xcb_icccm_get_text_property_reply_t *prop,
+                                      xcb_generic_error_t **e);
 
 /* WM_ICON_NAME */
 
@@ -176,7 +176,17 @@ uint8_t xcb_get_wm_name_reply(xcb_connection_t *c,
  * @param name_len Length of name value to set.
  * @param name Name value to set.
  */
-xcb_void_cookie_t xcb_set_wm_icon_name_checked(xcb_connection_t *c,
+xcb_void_cookie_t xcb_icccm_set_wm_icon_name_checked(xcb_connection_t *c,
+                                                       xcb_window_t window,
+                                                       xcb_atom_t encoding,
+                                                       uint8_t format,
+                                                       uint32_t name_len,
+                                                       const char *name);
+
+/**
+ * @see xcb_icccm_set_wm_icon_name_checked()
+ */
+xcb_void_cookie_t xcb_icccm_set_wm_icon_name(xcb_connection_t *c,
                                                xcb_window_t window,
                                                xcb_atom_t encoding,
                                                uint8_t format,
@@ -184,29 +194,19 @@ xcb_void_cookie_t xcb_set_wm_icon_name_checked(xcb_connection_t *c,
                                                const char *name);
 
 /**
- * @see xcb_set_wm_icon_name_checked()
- */
-xcb_void_cookie_t xcb_set_wm_icon_name(xcb_connection_t *c,
-                                       xcb_window_t window,
-                                       xcb_atom_t encoding,
-                                       uint8_t format,
-                                       uint32_t name_len,
-                                       const char *name);
-
-/**
  * @brief Send request to get WM_ICON_NAME property of a window.
  * @param c The connection to the X server.
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_icon_name(xcb_connection_t *c,
-                                               xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_icon_name(xcb_connection_t *c,
+                                                       xcb_window_t window);
 
 /**
-  * @see xcb_get_wm_icon_name()
-  */
-xcb_get_property_cookie_t xcb_get_wm_icon_name_unchecked(xcb_connection_t *c,
-                                                         xcb_window_t window);
+ * @see xcb_icccm_get_wm_icon_name()
+ */
+xcb_get_property_cookie_t xcb_icccm_get_wm_icon_name_unchecked(xcb_connection_t *c,
+                                                                 xcb_window_t window);
 
 /**
  * @brief Fill given structure with the WM_ICON_NAME property of a window.
@@ -214,13 +214,13 @@ xcb_get_property_cookie_t xcb_get_wm_icon_name_unchecked(xcb_connection_t *c,
  * @param cookie Request cookie.
  * @param prop WM_ICON_NAME property value.
  * @param e Error if any.
- * @see xcb_get_text_property_reply()
+ * @see xcb_icccm_get_text_property_reply()
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_get_wm_icon_name_reply(xcb_connection_t *c,
-                                   xcb_get_property_cookie_t cookie,
-                                   xcb_get_text_property_reply_t *prop,
-                                   xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_icon_name_reply(xcb_connection_t *c,
+                                           xcb_get_property_cookie_t cookie,
+                                           xcb_icccm_get_text_property_reply_t *prop,
+                                           xcb_generic_error_t **e);
 
 /* WM_COLORMAP_WINDOWS */
 
@@ -233,33 +233,33 @@ uint8_t xcb_get_wm_icon_name_reply(xcb_connection_t *c,
  * @param list Windows list.
  * @return The request cookie.
  */
-xcb_void_cookie_t xcb_set_wm_colormap_windows_checked(xcb_connection_t *c,
+xcb_void_cookie_t xcb_icccm_set_wm_colormap_windows_checked(xcb_connection_t *c,
+                                                              xcb_window_t window,
+                                                              xcb_atom_t wm_colormap_windows_atom,
+                                                              uint32_t list_len,
+                                                              const xcb_window_t *list);
+
+/**
+ * @see xcb_icccm_set_wm_colormap_windows_checked()
+ */
+xcb_void_cookie_t xcb_icccm_set_wm_colormap_windows(xcb_connection_t *c,
                                                       xcb_window_t window,
                                                       xcb_atom_t wm_colormap_windows_atom,
                                                       uint32_t list_len,
                                                       const xcb_window_t *list);
 
 /**
- * @see xcb_set_wm_colormap_windows_checked()
- */
-xcb_void_cookie_t xcb_set_wm_colormap_windows(xcb_connection_t *c,
-                                              xcb_window_t window,
-                                              xcb_atom_t wm_colormap_windows_atom,
-                                              uint32_t list_len,
-                                              const xcb_window_t *list);
-
-/**
  * @brief WM_COLORMAP_WINDOWS structure.
  */
 typedef struct {
-  /** Length of the windows list */
-  uint32_t windows_len;
-  /** Windows list */
-  xcb_window_t *windows;
-  /** Store reply to avoid memory allocation, should normally not be
-      used directly */
-  xcb_get_property_reply_t *_reply;
-} xcb_get_wm_colormap_windows_reply_t;
+/** Length of the windows list */
+uint32_t windows_len;
+/** Windows list */
+xcb_window_t *windows;
+/** Store reply to avoid memory allocation, should normally not be
+    used directly */
+xcb_get_property_reply_t *_reply;
+} xcb_icccm_get_wm_colormap_windows_reply_t;
 
 /**
  * @brief Send request to get WM_COLORMAP_WINDOWS property of a given window.
@@ -267,16 +267,16 @@ typedef struct {
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_colormap_windows(xcb_connection_t *c,
-                                                      xcb_window_t window,
-                                                      xcb_atom_t wm_colormap_windows_atom);
+xcb_get_property_cookie_t xcb_icccm_get_wm_colormap_windows(xcb_connection_t *c,
+                                                              xcb_window_t window,
+                                                              xcb_atom_t wm_colormap_windows_atom);
 
 /**
- * @see xcb_get_wm_colormap_windows()
+ * @see xcb_icccm_get_wm_colormap_windows()
  */
-xcb_get_property_cookie_t xcb_get_wm_colormap_windows_unchecked(xcb_connection_t *c,
-                                                                xcb_window_t window,
-                                                                xcb_atom_t wm_colormap_windows_atom);
+xcb_get_property_cookie_t xcb_icccm_get_wm_colormap_windows_unchecked(xcb_connection_t *c,
+                                                                        xcb_window_t window,
+                                                                        xcb_atom_t wm_colormap_windows_atom);
 
 /**
  * @brief Fill the given structure with the WM_COLORMAP_WINDOWS property of a window.
@@ -285,10 +285,10 @@ xcb_get_property_cookie_t xcb_get_wm_colormap_windows_unchecked(xcb_connection_t
  * @return Return 1 on success, 0 otherwise.
  *
  * protocols structure members should be freed by
- * xcb_get_wm_protocols_reply_wipe().
+ * xcb_icccm_get_wm_protocols_reply_wipe().
  */
-uint8_t xcb_get_wm_colormap_windows_from_reply(xcb_get_property_reply_t *reply,
-                                               xcb_get_wm_colormap_windows_reply_t *colormap_windows);
+uint8_t xcb_icccm_get_wm_colormap_windows_from_reply(xcb_get_property_reply_t *reply,
+                                                       xcb_icccm_get_wm_colormap_windows_reply_t *colormap_windows);
 /**
  * @brief Fill the given structure with the WM_COLORMAP_WINDOWS property of a window.
  * @param c The connection to the X server.
@@ -298,21 +298,21 @@ uint8_t xcb_get_wm_colormap_windows_from_reply(xcb_get_property_reply_t *reply,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_colormap_windows_unchecked() is used.  Otherwise, it
+ * xcb_icccm_get_wm_colormap_windows_unchecked() is used.  Otherwise, it
  * stores the error if any. protocols structure members should be
- * freed by xcb_get_wm_colormap_windows_reply_wipe().
+ * freed by xcb_icccm_get_wm_colormap_windows_reply_wipe().
  */
-uint8_t xcb_get_wm_colormap_windows_reply(xcb_connection_t *c,
-                                          xcb_get_property_cookie_t cookie,
-                                          xcb_get_wm_colormap_windows_reply_t *windows,
-                                          xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_colormap_windows_reply(xcb_connection_t *c,
+                                                  xcb_get_property_cookie_t cookie,
+                                                  xcb_icccm_get_wm_colormap_windows_reply_t *windows,
+                                                  xcb_generic_error_t **e);
 
 /**
  * @brief Wipe protocols structure members previously allocated by
- *        xcb_get_wm_colormap_windows_reply().
+ *        xcb_icccm_get_wm_colormap_windows_reply().
  * @param windows windows structure whose members is going to be freed.
  */
-void xcb_get_wm_colormap_windows_reply_wipe(xcb_get_wm_colormap_windows_reply_t *windows);
+void xcb_icccm_get_wm_colormap_windows_reply_wipe(xcb_icccm_get_wm_colormap_windows_reply_t *windows);
 
 /* WM_CLIENT_MACHINE */
 
@@ -325,7 +325,17 @@ void xcb_get_wm_colormap_windows_reply_wipe(xcb_get_wm_colormap_windows_reply_t 
  * @param name_len Length of name value to set.
  * @param name Name value to set.
  */
-xcb_void_cookie_t xcb_set_wm_client_machine_checked(xcb_connection_t *c,
+xcb_void_cookie_t xcb_icccm_set_wm_client_machine_checked(xcb_connection_t *c,
+                                                            xcb_window_t window,
+                                                            xcb_atom_t encoding,
+                                                            uint8_t format,
+                                                            uint32_t name_len,
+                                                            const char *name);
+
+/**
+ * @see xcb_icccm_set_wm_client_machine_checked()
+ */
+xcb_void_cookie_t xcb_icccm_set_wm_client_machine(xcb_connection_t *c,
                                                     xcb_window_t window,
                                                     xcb_atom_t encoding,
                                                     uint8_t format,
@@ -333,29 +343,19 @@ xcb_void_cookie_t xcb_set_wm_client_machine_checked(xcb_connection_t *c,
                                                     const char *name);
 
 /**
- * @see xcb_set_wm_client_machine_checked()
- */
-xcb_void_cookie_t xcb_set_wm_client_machine(xcb_connection_t *c,
-                                            xcb_window_t window,
-                                            xcb_atom_t encoding,
-                                            uint8_t format,
-                                            uint32_t name_len,
-                                            const char *name);
-
-/**
  * @brief Send request to get WM_CLIENT_MACHINE property of a window.
  * @param c The connection to the X server.
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_client_machine(xcb_connection_t *c,
-                                                    xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_client_machine(xcb_connection_t *c,
+                                                            xcb_window_t window);
 
 /**
- * @see xcb_get_wm_client_machine()
+ * @see xcb_icccm_get_wm_client_machine()
  */
-xcb_get_property_cookie_t xcb_get_wm_client_machine_unchecked(xcb_connection_t *c,
-                                                              xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_client_machine_unchecked(xcb_connection_t *c,
+                                                                      xcb_window_t window);
 
 /**
  * @brief Fill given structure with the WM_CLIENT_MACHINE property of a window.
@@ -363,13 +363,13 @@ xcb_get_property_cookie_t xcb_get_wm_client_machine_unchecked(xcb_connection_t *
  * @param cookie Request cookie.
  * @param prop WM_CLIENT_MACHINE property value.
  * @param e Error if any.
- * @see xcb_get_text_property_reply()
+ * @see xcb_icccm_get_text_property_reply()
  * @return Return 1 on success, 0 otherwise.
  */
-uint8_t xcb_get_wm_client_machine_reply(xcb_connection_t *c,
-                                        xcb_get_property_cookie_t cookie,
-                                        xcb_get_text_property_reply_t *prop,
-                                        xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_client_machine_reply(xcb_connection_t *c,
+                                                xcb_get_property_cookie_t cookie,
+                                                xcb_icccm_get_text_property_reply_t *prop,
+                                                xcb_generic_error_t **e);
 
 /* WM_CLASS */
 
@@ -389,28 +389,28 @@ uint8_t xcb_get_wm_client_machine_reply(xcb_connection_t *c,
  * @param class WM_CLASS string.
  * @return The request cookie.
  */
-xcb_void_cookie_t xcb_set_wm_class_checked(xcb_connection_t *c,
+xcb_void_cookie_t xcb_icccm_set_wm_class_checked(xcb_connection_t *c,
+                                                   xcb_window_t window,
+                                                   uint32_t class_len,
+                                                   const char *class);
+
+/**
+ * @see xcb_icccm_set_wm_class_checked()
+ */
+xcb_void_cookie_t xcb_icccm_set_wm_class(xcb_connection_t *c,
                                            xcb_window_t window,
                                            uint32_t class_len,
                                            const char *class);
 
-/**
- * @see xcb_set_wm_class_checked()
- */
-xcb_void_cookie_t xcb_set_wm_class(xcb_connection_t *c,
-                                   xcb_window_t window,
-                                   uint32_t class_len,
-                                   const char *class);
-
 typedef struct {
-  /** Instance name */
-  char *instance_name;
-  /** Class of application */
-  char *class_name;
-  /** Store reply to avoid memory allocation, should normally not be
-      used directly */
-  xcb_get_property_reply_t *_reply;
-} xcb_get_wm_class_reply_t;
+/** Instance name */
+char *instance_name;
+/** Class of application */
+char *class_name;
+/** Store reply to avoid memory allocation, should normally not be
+    used directly */
+xcb_get_property_reply_t *_reply;
+} xcb_icccm_get_wm_class_reply_t;
 
 /**
  * @brief Deliver a GetProperty request to the X server for WM_CLASS.
@@ -418,14 +418,14 @@ typedef struct {
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_class(xcb_connection_t *c,
-                                           xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_class(xcb_connection_t *c,
+                                                   xcb_window_t window);
 
 /**
- * @see xcb_get_wm_class()
+ * @see xcb_icccm_get_wm_class()
  */
-xcb_get_property_cookie_t xcb_get_wm_class_unchecked(xcb_connection_t *c,
-                                                     xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_class_unchecked(xcb_connection_t *c,
+                                                             xcb_window_t window);
 
 
 /**
@@ -435,8 +435,8 @@ xcb_get_property_cookie_t xcb_get_wm_class_unchecked(xcb_connection_t *c,
  * @return Return 1 on success, 0 otherwise.
  */
 uint8_t
-xcb_get_wm_class_from_reply(xcb_get_wm_class_reply_t *prop,
-                            xcb_get_property_reply_t *reply);
+xcb_icccm_get_wm_class_from_reply(xcb_icccm_get_wm_class_reply_t *prop,
+                                    xcb_get_property_reply_t *reply);
 
 /**
  * @brief Fill given structure with the WM_CLASS property of a window.
@@ -447,21 +447,21 @@ xcb_get_wm_class_from_reply(xcb_get_wm_class_reply_t *prop,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_class_unchecked() is used.  Otherwise, it stores the
+ * xcb_icccm_get_wm_class_unchecked() is used.  Otherwise, it stores the
  * error if any. prop structure members should be freed by
- * xcb_get_wm_class_reply_wipe().
+ * xcb_icccm_get_wm_class_reply_wipe().
  */
-uint8_t xcb_get_wm_class_reply(xcb_connection_t *c,
-                               xcb_get_property_cookie_t cookie,
-                               xcb_get_wm_class_reply_t *prop,
-                               xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_class_reply(xcb_connection_t *c,
+                                       xcb_get_property_cookie_t cookie,
+                                       xcb_icccm_get_wm_class_reply_t *prop,
+                                       xcb_generic_error_t **e);
 
 /**
  * @brief Wipe prop structure members previously allocated by
- *        xcb_get_wm_class_reply().
+ *        xcb_icccm_get_wm_class_reply().
  * @param prop prop structure whose members is going to be freed.
  */
-void xcb_get_wm_class_reply_wipe(xcb_get_wm_class_reply_t *prop);
+void xcb_icccm_get_wm_class_reply_wipe(xcb_icccm_get_wm_class_reply_t *prop);
 
 /* WM_TRANSIENT_FOR */
 
@@ -472,16 +472,16 @@ void xcb_get_wm_class_reply_wipe(xcb_get_wm_class_reply_t *prop);
  * @param transient_for_window The WM_TRANSIENT_FOR window X identifier.
  * @return The request cookie.
  */
-xcb_void_cookie_t xcb_set_wm_transient_for_checked(xcb_connection_t *c,
-                                                   xcb_window_t window,
-                                                   xcb_window_t transient_for_window);
+xcb_void_cookie_t xcb_icccm_set_wm_transient_for_checked(xcb_connection_t *c,
+                                                           xcb_window_t window,
+                                                           xcb_window_t transient_for_window);
 
 /**
- * @see xcb_set_wm_transient_for
+ * @see xcb_icccm_set_wm_transient_for
  */
-xcb_void_cookie_t xcb_set_wm_transient_for(xcb_connection_t *c,
-                                           xcb_window_t window,
-                                           xcb_window_t transient_for_window);
+xcb_void_cookie_t xcb_icccm_set_wm_transient_for(xcb_connection_t *c,
+                                                   xcb_window_t window,
+                                                   xcb_window_t transient_for_window);
 
 /**
  * @brief Send request to get WM_TRANSIENT_FOR property of a window.
@@ -489,14 +489,14 @@ xcb_void_cookie_t xcb_set_wm_transient_for(xcb_connection_t *c,
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_transient_for(xcb_connection_t *c,
-                                                   xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_transient_for(xcb_connection_t *c,
+                                                           xcb_window_t window);
 
 /**
- * @see xcb_get_wm_transient_for_unchecked()
+ * @see xcb_icccm_get_wm_transient_for_unchecked()
  */
-xcb_get_property_cookie_t xcb_get_wm_transient_for_unchecked(xcb_connection_t *c,
-                                                             xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_transient_for_unchecked(xcb_connection_t *c,
+                                                                     xcb_window_t window);
 
 /**
  * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
@@ -505,8 +505,8 @@ xcb_get_property_cookie_t xcb_get_wm_transient_for_unchecked(xcb_connection_t *c
  * @return Return 1 on success, 0 otherwise.
  */
 uint8_t
-xcb_get_wm_transient_for_from_reply(xcb_window_t *prop,
-                                    xcb_get_property_reply_t *reply);
+xcb_icccm_get_wm_transient_for_from_reply(xcb_window_t *prop,
+                                            xcb_get_property_reply_t *reply);
 /**
  * @brief Fill given structure with the WM_TRANSIENT_FOR property of a window.
  * @param c The connection to the X server.
@@ -516,57 +516,57 @@ xcb_get_wm_transient_for_from_reply(xcb_window_t *prop,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_transient_for_unchecked() is used.  Otherwise, it stores
+ * xcb_icccm_get_wm_transient_for_unchecked() is used.  Otherwise, it stores
  * the error if any.
  */
-uint8_t xcb_get_wm_transient_for_reply(xcb_connection_t *c,
-                                       xcb_get_property_cookie_t cookie,
-                                       xcb_window_t *prop,
-                                       xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_transient_for_reply(xcb_connection_t *c,
+                                               xcb_get_property_cookie_t cookie,
+                                               xcb_window_t *prop,
+                                               xcb_generic_error_t **e);
 
 /* WM_SIZE_HINTS */
 
 typedef enum {
-  XCB_SIZE_HINT_US_POSITION = 1 << 0,
-  XCB_SIZE_HINT_US_SIZE = 1 << 1,
-  XCB_SIZE_HINT_P_POSITION = 1 << 2,
-  XCB_SIZE_HINT_P_SIZE = 1 << 3,
-  XCB_SIZE_HINT_P_MIN_SIZE = 1 << 4,
-  XCB_SIZE_HINT_P_MAX_SIZE = 1 << 5,
-  XCB_SIZE_HINT_P_RESIZE_INC = 1 << 6,
-  XCB_SIZE_HINT_P_ASPECT = 1 << 7,
-  XCB_SIZE_HINT_BASE_SIZE = 1 << 8,
-  XCB_SIZE_HINT_P_WIN_GRAVITY = 1 << 9
-} xcb_size_hints_flags_t;
+XCB_ICCCM_SIZE_HINT_US_POSITION = 1 << 0,
+  XCB_ICCCM_SIZE_HINT_US_SIZE = 1 << 1,
+  XCB_ICCCM_SIZE_HINT_P_POSITION = 1 << 2,
+  XCB_ICCCM_SIZE_HINT_P_SIZE = 1 << 3,
+  XCB_ICCCM_SIZE_HINT_P_MIN_SIZE = 1 << 4,
+  XCB_ICCCM_SIZE_HINT_P_MAX_SIZE = 1 << 5,
+  XCB_ICCCM_SIZE_HINT_P_RESIZE_INC = 1 << 6,
+  XCB_ICCCM_SIZE_HINT_P_ASPECT = 1 << 7,
+  XCB_ICCCM_SIZE_HINT_BASE_SIZE = 1 << 8,
+  XCB_ICCCM_SIZE_HINT_P_WIN_GRAVITY = 1 << 9
+  } xcb_icccm_size_hints_flags_t;
 
 /**
  * @brief Size hints structure.
  */
 typedef struct {
-  /** User specified flags */
-  uint32_t flags;
-  /** User-specified position */
-  int32_t x, y;
-  /** User-specified size */
-  int32_t width, height;
-  /** Program-specified minimum size */
-  int32_t min_width, min_height;
-  /** Program-specified maximum size */
-  int32_t max_width, max_height;
-  /** Program-specified resize increments */
-  int32_t width_inc, height_inc;
-  /** Program-specified minimum aspect ratios */
-  int32_t min_aspect_num, min_aspect_den;
-  /** Program-specified maximum aspect ratios */
-  int32_t max_aspect_num, max_aspect_den;
-  /** Program-specified base size */
-  int32_t base_width, base_height;
-  /** Program-specified window gravity */
-  uint32_t win_gravity;
+/** User specified flags */
+uint32_t flags;
+/** User-specified position */
+int32_t x, y;
+/** User-specified size */
+int32_t width, height;
+/** Program-specified minimum size */
+int32_t min_width, min_height;
+/** Program-specified maximum size */
+int32_t max_width, max_height;
+/** Program-specified resize increments */
+int32_t width_inc, height_inc;
+/** Program-specified minimum aspect ratios */
+int32_t min_aspect_num, min_aspect_den;
+/** Program-specified maximum aspect ratios */
+int32_t max_aspect_num, max_aspect_den;
+/** Program-specified base size */
+int32_t base_width, base_height;
+/** Program-specified window gravity */
+uint32_t win_gravity;
 } xcb_size_hints_t;
 
 /** Number of elements in this structure */
-#define XCB_NUM_WM_SIZE_HINTS_ELEMENTS 18
+#define XCB_ICCCM_NUM_WM_SIZE_HINTS_ELEMENTS 18
 
 /**
  * @brief Set size hints to a given position.
@@ -575,8 +575,8 @@ typedef struct {
  * @param x The X position.
  * @param y The Y position.
  */
-void xcb_size_hints_set_position(xcb_size_hints_t *hints, int user_specified,
-                                 int32_t x, int32_t y);
+void xcb_icccm_size_hints_set_position(xcb_size_hints_t *hints, int user_specified,
+                                         int32_t x, int32_t y);
 
 /**
  * @brief Set size hints to a given size.
@@ -585,8 +585,8 @@ void xcb_size_hints_set_position(xcb_size_hints_t *hints, int user_specified,
  * @param width The width.
  * @param height The height.
  */
-void xcb_size_hints_set_size(xcb_size_hints_t *hints, int user_specified,
-                             int32_t width, int32_t height);
+void xcb_icccm_size_hints_set_size(xcb_size_hints_t *hints, int user_specified,
+                                     int32_t width, int32_t height);
 
 /**
  * @brief Set size hints to a given minimum size.
@@ -594,8 +594,8 @@ void xcb_size_hints_set_size(xcb_size_hints_t *hints, int user_specified,
  * @param width The minimum width.
  * @param height The minimum height.
  */
-void xcb_size_hints_set_min_size(xcb_size_hints_t *hints, int32_t min_width,
-                                 int32_t min_height);
+void xcb_icccm_size_hints_set_min_size(xcb_size_hints_t *hints, int32_t min_width,
+                                         int32_t min_height);
 
 /**
  * @brief Set size hints to a given maximum size.
@@ -603,8 +603,8 @@ void xcb_size_hints_set_min_size(xcb_size_hints_t *hints, int32_t min_width,
  * @param width The maximum width.
  * @param height The maximum height.
  */
-void xcb_size_hints_set_max_size(xcb_size_hints_t *hints, int32_t max_width,
-                                 int32_t max_height);
+void xcb_icccm_size_hints_set_max_size(xcb_size_hints_t *hints, int32_t max_width,
+                                         int32_t max_height);
 
 /**
  * @brief Set size hints to a given resize increments.
@@ -612,8 +612,8 @@ void xcb_size_hints_set_max_size(xcb_size_hints_t *hints, int32_t max_width,
  * @param width The resize increments width.
  * @param height The resize increments height.
  */
-void xcb_size_hints_set_resize_inc(xcb_size_hints_t *hints, int32_t width_inc,
-                                   int32_t height_inc);
+void xcb_icccm_size_hints_set_resize_inc(xcb_size_hints_t *hints, int32_t width_inc,
+                                           int32_t height_inc);
 
 /**
  * @brief Set size hints to a given aspect ratios.
@@ -623,9 +623,9 @@ void xcb_size_hints_set_resize_inc(xcb_size_hints_t *hints, int32_t width_inc,
  * @param max_aspect_num The maximum aspect ratios for the width.
  * @param max_aspect_den The maximum aspect ratios for the height.
  */
-void xcb_size_hints_set_aspect(xcb_size_hints_t *hints, int32_t min_aspect_num,
-                               int32_t min_aspect_den, int32_t max_aspect_num,
-                               int32_t max_aspect_den);
+void xcb_icccm_size_hints_set_aspect(xcb_size_hints_t *hints, int32_t min_aspect_num,
+                                       int32_t min_aspect_den, int32_t max_aspect_num,
+                                     int32_t max_aspect_den);
 
 /**
  * @brief Set size hints to a given base size.
@@ -633,16 +633,16 @@ void xcb_size_hints_set_aspect(xcb_size_hints_t *hints, int32_t min_aspect_num,
  * @param base_width Base width.
  * @param base_height Base height.
  */
-void xcb_size_hints_set_base_size(xcb_size_hints_t *hints, int32_t base_width,
-                                  int32_t base_height);
+void xcb_icccm_size_hints_set_base_size(xcb_size_hints_t *hints, int32_t base_width,
+                                          int32_t base_height);
 
 /**
  * @brief Set size hints to a given window gravity.
  * @param hints SIZE_HINTS structure.
  * @param win_gravity Window gravity value.
  */
-void xcb_size_hints_set_win_gravity(xcb_size_hints_t *hints,
-                                    xcb_gravity_t win_gravity);
+void xcb_icccm_size_hints_set_win_gravity(xcb_size_hints_t *hints,
+                                            xcb_gravity_t win_gravity);
 
 /**
  * @brief Deliver a ChangeProperty request to set a value to a given property.
@@ -651,18 +651,18 @@ void xcb_size_hints_set_win_gravity(xcb_size_hints_t *hints,
  * @param property Property to set value for.
  * @param hints Hints value to set.
  */
-xcb_void_cookie_t xcb_set_wm_size_hints_checked(xcb_connection_t *c,
-						xcb_window_t window,
-						xcb_atom_t property,
-						xcb_size_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_size_hints_checked(xcb_connection_t *c,
+                                                        xcb_window_t window,
+                                                      xcb_atom_t property,
+                                                      xcb_size_hints_t *hints);
 
 /**
- * @see xcb_set_wm_size_hints_checked()
+ * @see xcb_icccm_set_wm_size_hints_checked()
  */
-xcb_void_cookie_t xcb_set_wm_size_hints(xcb_connection_t *c,
-					xcb_window_t window,
-					xcb_atom_t property,
-					xcb_size_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_size_hints(xcb_connection_t *c,
+                                                xcb_window_t window,
+                                              xcb_atom_t property,
+                                              xcb_size_hints_t *hints);
 
 /**
  * @brief Send request to get size hints structure for the named property.
@@ -671,16 +671,16 @@ xcb_void_cookie_t xcb_set_wm_size_hints(xcb_connection_t *c,
  * @param property Specify the property name.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_size_hints(xcb_connection_t *c,
-                                                xcb_window_t window,
-                                                xcb_atom_t property);
+xcb_get_property_cookie_t xcb_icccm_get_wm_size_hints(xcb_connection_t *c,
+                                                        xcb_window_t window,
+                                                      xcb_atom_t property);
 
 /**
- * @see xcb_get_wm_size_hints()
+ * @see xcb_icccm_get_wm_size_hints()
  */
-xcb_get_property_cookie_t xcb_get_wm_size_hints_unchecked(xcb_connection_t *c,
-                                                          xcb_window_t window,
-                                                          xcb_atom_t property);
+xcb_get_property_cookie_t xcb_icccm_get_wm_size_hints_unchecked(xcb_connection_t *c,
+                                                                  xcb_window_t window,
+                                                                xcb_atom_t property);
 
 /**
  * @brief Fill given structure with the size hints of the named property.
@@ -691,13 +691,13 @@ xcb_get_property_cookie_t xcb_get_wm_size_hints_unchecked(xcb_connection_t *c,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_size_hints_unchecked() is used.  Otherwise, it stores
+ * xcb_icccm_get_wm_size_hints_unchecked() is used.  Otherwise, it stores
  * the error if any. The returned pointer should be freed.
  */
-uint8_t xcb_get_wm_size_hints_reply(xcb_connection_t *c,
-                                    xcb_get_property_cookie_t cookie,
-                                    xcb_size_hints_t *hints,
-                                    xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_size_hints_reply(xcb_connection_t *c,
+                                            xcb_get_property_cookie_t cookie,
+                                          xcb_size_hints_t *hints,
+                                          xcb_generic_error_t **e);
 
 /* WM_NORMAL_HINTS */
 
@@ -707,16 +707,16 @@ uint8_t xcb_get_wm_size_hints_reply(xcb_connection_t *c,
  * @param window Window X identifier.
  * @param hints Hints value to set.
  */
-xcb_void_cookie_t xcb_set_wm_normal_hints_checked(xcb_connection_t *c,
-						  xcb_window_t window,
-						  xcb_size_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_normal_hints_checked(xcb_connection_t *c,
+                                                          xcb_window_t window,
+                                                        xcb_size_hints_t *hints);
 
 /**
- * @see xcb_set_wm_normal_hints_checked()
+ * @see xcb_icccm_set_wm_normal_hints_checked()
  */
-xcb_void_cookie_t xcb_set_wm_normal_hints(xcb_connection_t *c,
-					  xcb_window_t window,
-					  xcb_size_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_normal_hints(xcb_connection_t *c,
+                                                  xcb_window_t window,
+                                                xcb_size_hints_t *hints);
 
 /**
  * @brief Send request to get WM_NORMAL_HINTS property of a window.
@@ -724,14 +724,14 @@ xcb_void_cookie_t xcb_set_wm_normal_hints(xcb_connection_t *c,
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_normal_hints(xcb_connection_t *c,
-                                                  xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_normal_hints(xcb_connection_t *c,
+                                                          xcb_window_t window);
 
 /**
- * @see xcb_get_wm_normal_hints()
+ * @see xcb_icccm_get_wm_normal_hints()
  */
-xcb_get_property_cookie_t xcb_get_wm_normal_hints_unchecked(xcb_connection_t *c,
-                                                            xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_normal_hints_unchecked(xcb_connection_t *c,
+                                                                    xcb_window_t window);
 
 /**
  * @brief Fill given structure with the WM_NORMAL_HINTS property of a window.
@@ -740,8 +740,8 @@ xcb_get_property_cookie_t xcb_get_wm_normal_hints_unchecked(xcb_connection_t *c,
  * @return Return 1 on success, 0 otherwise.
  */
 uint8_t
-xcb_get_wm_size_hints_from_reply(xcb_size_hints_t *hints,
-                                 xcb_get_property_reply_t *reply);
+xcb_icccm_get_wm_size_hints_from_reply(xcb_size_hints_t *hints,
+                                         xcb_get_property_reply_t *reply);
 
 /**
  * @brief Fill given structure with the WM_NORMAL_HINTS property of a window.
@@ -752,13 +752,13 @@ xcb_get_wm_size_hints_from_reply(xcb_size_hints_t *hints,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_normal_hints_unchecked() is used.  Otherwise, it stores
+ * xcb_icccm_get_wm_normal_hints_unchecked() is used.  Otherwise, it stores
  * the error if any. The returned pointer should be freed.
  */
-uint8_t xcb_get_wm_normal_hints_reply(xcb_connection_t *c,
-                                      xcb_get_property_cookie_t cookie,
-                                      xcb_size_hints_t *hints,
-                                      xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_normal_hints_reply(xcb_connection_t *c,
+                                              xcb_get_property_cookie_t cookie,
+                                            xcb_size_hints_t *hints,
+                                            xcb_generic_error_t **e);
 
 /* WM_HINTS */
 
@@ -766,10 +766,10 @@ uint8_t xcb_get_wm_normal_hints_reply(xcb_connection_t *c,
  * @brief WM hints structure (may be extended in the future).
  */
 typedef struct {
-  /** Marks which fields in this structure are defined */
-  int32_t flags;
-  /** Does this application rely on the window manager to get keyboard
-      input? */
+/** Marks which fields in this structure are defined */
+int32_t flags;
+/** Does this application rely on the window manager to get keyboard
+    input? */
   uint32_t input;
   /** See below */
   int32_t initial_state;
@@ -783,110 +783,110 @@ typedef struct {
   xcb_pixmap_t icon_mask;
   /* Identifier of related window group */
   xcb_window_t window_group;
-} xcb_wm_hints_t;
+} xcb_icccm_wm_hints_t;
 
 /** Number of elements in this structure */
-#define XCB_NUM_WM_HINTS_ELEMENTS 9
+#define XCB_ICCCM_NUM_WM_HINTS_ELEMENTS 9
 
 /**
  * @brief WM_HINTS window states.
  */
 typedef enum {
-  XCB_WM_STATE_WITHDRAWN = 0,
-  XCB_WM_STATE_NORMAL = 1,
-  XCB_WM_STATE_ICONIC = 3
-} xcb_wm_state_t;
+  XCB_ICCCM_WM_STATE_WITHDRAWN = 0,
+  XCB_ICCCM_WM_STATE_NORMAL = 1,
+  XCB_ICCCM_WM_STATE_ICONIC = 3
+} xcb_icccm_wm_state_t;
 
 typedef enum {
-  XCB_WM_HINT_INPUT = (1L << 0),
-  XCB_WM_HINT_STATE = (1L << 1),
-  XCB_WM_HINT_ICON_PIXMAP = (1L << 2),
-  XCB_WM_HINT_ICON_WINDOW = (1L << 3),
-  XCB_WM_HINT_ICON_POSITION = (1L << 4),
-  XCB_WM_HINT_ICON_MASK = (1L << 5),
-  XCB_WM_HINT_WINDOW_GROUP = (1L << 6),
-  XCB_WM_HINT_X_URGENCY = (1L << 8)
-} xcb_wm_t;
+  XCB_ICCCM_WM_HINT_INPUT = (1L << 0),
+  XCB_ICCCM_WM_HINT_STATE = (1L << 1),
+  XCB_ICCCM_WM_HINT_ICON_PIXMAP = (1L << 2),
+  XCB_ICCCM_WM_HINT_ICON_WINDOW = (1L << 3),
+  XCB_ICCCM_WM_HINT_ICON_POSITION = (1L << 4),
+  XCB_ICCCM_WM_HINT_ICON_MASK = (1L << 5),
+  XCB_ICCCM_WM_HINT_WINDOW_GROUP = (1L << 6),
+  XCB_ICCCM_WM_HINT_X_URGENCY = (1L << 8)
+} xcb_icccm_wm_t;
 
-#define XCB_WM_ALL_HINTS (XCB_WM_HINT_INPUT | XCB_WM_HINT_STATE |\
-                          XCB_WM_HINT_ICON_PIXMAP | XCB_WM_HINT_ICON_WINDOW |\
-                          XCB_WM_HINT_ICON_POSITION | XCB_WM_HINT_ICON_MASK |\
-                          XCB_WM_HINT_WINDOW_GROUP)
+#define XCB_ICCCM_WM_ALL_HINTS (XCB_ICCCM_WM_HINT_INPUT | XCB_ICCCM_WM_HINT_STATE | \
+                                XCB_ICCCM_WM_HINT_ICON_PIXMAP | XCB_ICCCM_WM_HINT_ICON_WINDOW | \
+                                XCB_ICCCM_WM_HINT_ICON_POSITION | XCB_ICCCM_WM_HINT_ICON_MASK | \
+                                XCB_ICCCM_WM_HINT_WINDOW_GROUP)
 
 /**
  * @brief Get urgency hint.
  * @param hints WM_HINTS structure.
  * @return Urgency hint value.
  */
-uint32_t xcb_wm_hints_get_urgency(xcb_wm_hints_t *hints);
+uint32_t xcb_icccm_wm_hints_get_urgency(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Set input focus.
  * @param hints WM_HINTS structure.
  * @param input Input focus.
  */
-void xcb_wm_hints_set_input(xcb_wm_hints_t *hints, uint8_t input);
+void xcb_icccm_wm_hints_set_input(xcb_icccm_wm_hints_t *hints, uint8_t input);
 
 /**
  * @brief Set hints state to 'iconic'.
  * @param hints WM_HINTS structure.
  */
-void xcb_wm_hints_set_iconic(xcb_wm_hints_t *hints);
+void xcb_icccm_wm_hints_set_iconic(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Set hints state to 'normal'.
  * @param hints WM_HINTS structure.
  */
-void xcb_wm_hints_set_normal(xcb_wm_hints_t *hints);
+void xcb_icccm_wm_hints_set_normal(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Set hints state to 'withdrawn'.
  * @param hints WM_HINTS structure.
  */
-void xcb_wm_hints_set_withdrawn(xcb_wm_hints_t *hints);
+void xcb_icccm_wm_hints_set_withdrawn(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Set hints state to none.
  * @param hints WM_HINTS structure.
  */
-void xcb_wm_hints_set_none(xcb_wm_hints_t *hints);
+void xcb_icccm_wm_hints_set_none(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Set pixmap to be used as icon.
  * @param hints WM_HINTS structure.
  * @param icon_pixmap Pixmap.
  */
-void xcb_wm_hints_set_icon_pixmap(xcb_wm_hints_t *hints,
-                                  xcb_pixmap_t icon_pixmap);
+void xcb_icccm_wm_hints_set_icon_pixmap(xcb_icccm_wm_hints_t *hints,
+                                        xcb_pixmap_t icon_pixmap);
 
 /**
  * @brief Set icon mask bitmap.
  * @param hints WM_HINTS structure.
  * @param icon_mask Pixmap.
  */
-void xcb_wm_hints_set_icon_mask(xcb_wm_hints_t *hints, xcb_pixmap_t icon_mask);
+void xcb_icccm_wm_hints_set_icon_mask(xcb_icccm_wm_hints_t *hints, xcb_pixmap_t icon_mask);
 
 /**
  * @brief Set window identifier to be used as icon.
  * @param hints WM_HINTS structure.
  * @param icon_window Window X identifier.
  */
-void xcb_wm_hints_set_icon_window(xcb_wm_hints_t *hints,
-                                  xcb_window_t icon_window);
+void xcb_icccm_wm_hints_set_icon_window(xcb_icccm_wm_hints_t *hints,
+                                        xcb_window_t icon_window);
 
 /**
  * @brief Set identifier of related window group.
  * @param hints WM_HINTS structure.
  * @param window_group Window X identifier.
  */
-void xcb_wm_hints_set_window_group(xcb_wm_hints_t *hints,
-                                   xcb_window_t window_group);
+void xcb_icccm_wm_hints_set_window_group(xcb_icccm_wm_hints_t *hints,
+                                         xcb_window_t window_group);
 
 /**
  * @brief Set urgency hints flag.
  * @param hints WM_HINTS structure.
  */
-void xcb_wm_hints_set_urgency(xcb_wm_hints_t *hints);
+void xcb_icccm_wm_hints_set_urgency(xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Deliver a SetProperty request to set WM_HINTS property value.
@@ -894,16 +894,16 @@ void xcb_wm_hints_set_urgency(xcb_wm_hints_t *hints);
  * @param window Window X identifier.
  * @param hints Hints value to set.
  */
-xcb_void_cookie_t xcb_set_wm_hints_checked(xcb_connection_t *c,
-					   xcb_window_t window,
-					   xcb_wm_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_hints_checked(xcb_connection_t *c,
+                                                 xcb_window_t window,
+                                                 xcb_icccm_wm_hints_t *hints);
 
 /**
- * @see xcb_set_wm_hints_checked()
+ * @see xcb_icccm_set_wm_hints_checked()
  */
-xcb_void_cookie_t xcb_set_wm_hints(xcb_connection_t *c,
-				   xcb_window_t window,
-				   xcb_wm_hints_t *hints);
+xcb_void_cookie_t xcb_icccm_set_wm_hints(xcb_connection_t *c,
+                                         xcb_window_t window,
+                                         xcb_icccm_wm_hints_t *hints);
 
 /**
  * @brief Send request to get WM_HINTS property of a window.
@@ -911,14 +911,14 @@ xcb_void_cookie_t xcb_set_wm_hints(xcb_connection_t *c,
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_hints(xcb_connection_t *c,
-                                           xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_hints(xcb_connection_t *c,
+                                                 xcb_window_t window);
 
 /**
- * @see xcb_get_wm_hints()
+ * @see xcb_icccm_get_wm_hints()
  */
-xcb_get_property_cookie_t xcb_get_wm_hints_unchecked(xcb_connection_t *c,
-                                                     xcb_window_t window);
+xcb_get_property_cookie_t xcb_icccm_get_wm_hints_unchecked(xcb_connection_t *c,
+                                                           xcb_window_t window);
 
 /**
  * @brief Fill given structure with the WM_HINTS property of a window.
@@ -927,8 +927,8 @@ xcb_get_property_cookie_t xcb_get_wm_hints_unchecked(xcb_connection_t *c,
  * @return Return 1 on success, 0 otherwise.
  */
 uint8_t
-xcb_get_wm_hints_from_reply(xcb_wm_hints_t *hints,
-                            xcb_get_property_reply_t *reply);
+xcb_icccm_get_wm_hints_from_reply(xcb_icccm_wm_hints_t *hints,
+                                  xcb_get_property_reply_t *reply);
 
 /**
  * @brief Fill given structure with the WM_HINTS property of a window.
@@ -939,13 +939,13 @@ xcb_get_wm_hints_from_reply(xcb_wm_hints_t *hints,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_hints_unchecked() is used.  Otherwise, it stores the
+ * xcb_icccm_get_wm_hints_unchecked() is used.  Otherwise, it stores the
  * error if any. The returned pointer should be freed.
  */
-uint8_t xcb_get_wm_hints_reply(xcb_connection_t *c,
-                               xcb_get_property_cookie_t cookie,
-                               xcb_wm_hints_t *hints,
-                               xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_hints_reply(xcb_connection_t *c,
+                                     xcb_get_property_cookie_t cookie,
+                                     xcb_icccm_wm_hints_t *hints,
+                                     xcb_generic_error_t **e);
 
 /* WM_PROTOCOLS */
 
@@ -957,20 +957,20 @@ uint8_t xcb_get_wm_hints_reply(xcb_connection_t *c,
  * @param list_len Atom list len.
  * @param list Atom list.
  */
-xcb_void_cookie_t xcb_set_wm_protocols_checked(xcb_connection_t *c,
-                                               xcb_window_t window,
-                                               xcb_atom_t wm_protocols,
-                                               uint32_t list_len,
-                                               xcb_atom_t *list);
+xcb_void_cookie_t xcb_icccm_set_wm_protocols_checked(xcb_connection_t *c,
+                                                     xcb_window_t window,
+                                                     xcb_atom_t wm_protocols,
+                                                     uint32_t list_len,
+                                                     xcb_atom_t *list);
 
 /**
- * @see xcb_set_wm_protocols_checked()
+ * @see xcb_icccm_set_wm_protocols_checked()
  */
-xcb_void_cookie_t xcb_set_wm_protocols(xcb_connection_t *c,
-                                       xcb_window_t window,
-                                       xcb_atom_t wm_protocols,
-                                       uint32_t list_len,
-                                       xcb_atom_t *list);
+xcb_void_cookie_t xcb_icccm_set_wm_protocols(xcb_connection_t *c,
+                                             xcb_window_t window,
+                                             xcb_atom_t wm_protocols,
+                                             uint32_t list_len,
+                                             xcb_atom_t *list);
 
 /**
  * @brief WM_PROTOCOLS structure.
@@ -983,7 +983,7 @@ typedef struct {
   /** Store reply to avoid memory allocation, should normally not be
       used directly */
   xcb_get_property_reply_t *_reply;
-} xcb_get_wm_protocols_reply_t;
+} xcb_icccm_get_wm_protocols_reply_t;
 
 /**
  * @brief Send request to get WM_PROTOCOLS property of a given window.
@@ -991,16 +991,16 @@ typedef struct {
  * @param window Window X identifier.
  * @return The request cookie.
  */
-xcb_get_property_cookie_t xcb_get_wm_protocols(xcb_connection_t *c,
-                                               xcb_window_t window,
-                                               xcb_atom_t wm_protocol_atom);
+xcb_get_property_cookie_t xcb_icccm_get_wm_protocols(xcb_connection_t *c,
+                                                     xcb_window_t window,
+                                                     xcb_atom_t wm_protocol_atom);
 
 /**
- * @see xcb_get_wm_protocols()
+ * @see xcb_icccm_get_wm_protocols()
  */
-xcb_get_property_cookie_t xcb_get_wm_protocols_unchecked(xcb_connection_t *c,
-                                                         xcb_window_t window,
-                                                         xcb_atom_t wm_protocol_atom);
+xcb_get_property_cookie_t xcb_icccm_get_wm_protocols_unchecked(xcb_connection_t *c,
+                                                               xcb_window_t window,
+                                                               xcb_atom_t wm_protocol_atom);
 
 /**
  * @brief Fill the given structure with the WM_PROTOCOLS property of a window.
@@ -1009,10 +1009,10 @@ xcb_get_property_cookie_t xcb_get_wm_protocols_unchecked(xcb_connection_t *c,
  * @return Return 1 on success, 0 otherwise.
  *
  * protocols structure members should be freed by
- * xcb_get_wm_protocols_reply_wipe().
+ * xcb_icccm_get_wm_protocols_reply_wipe().
  */
-uint8_t xcb_get_wm_protocols_from_reply(xcb_get_property_reply_t *reply,
-                                        xcb_get_wm_protocols_reply_t *protocols);
+uint8_t xcb_icccm_get_wm_protocols_from_reply(xcb_get_property_reply_t *reply,
+                                              xcb_icccm_get_wm_protocols_reply_t *protocols);
 /**
  * @brief Fill the given structure with the WM_PROTOCOLS property of a window.
  * @param c The connection to the X server.
@@ -1022,21 +1022,21 @@ uint8_t xcb_get_wm_protocols_from_reply(xcb_get_property_reply_t *reply,
  * @return Return 1 on success, 0 otherwise.
  *
  * The parameter e supplied to this function must be NULL if
- * xcb_get_wm_protocols_unchecked() is used.  Otherwise, it stores the
+ * xcb_icccm_get_wm_protocols_unchecked() is used.  Otherwise, it stores the
  * error if any. protocols structure members should be freed by
- * xcb_get_wm_protocols_reply_wipe().
+ * xcb_icccm_get_wm_protocols_reply_wipe().
  */
-uint8_t xcb_get_wm_protocols_reply(xcb_connection_t *c,
-                                   xcb_get_property_cookie_t cookie,
-                                   xcb_get_wm_protocols_reply_t *protocols,
-                                   xcb_generic_error_t **e);
+uint8_t xcb_icccm_get_wm_protocols_reply(xcb_connection_t *c,
+                                         xcb_get_property_cookie_t cookie,
+                                         xcb_icccm_get_wm_protocols_reply_t *protocols,
+                                         xcb_generic_error_t **e);
 
 /**
  * @brief Wipe protocols structure members previously allocated by
- *        xcb_get_wm_protocols_reply().
+ *        xcb_icccm_get_wm_protocols_reply().
  * @param protocols protocols structure whose members is going to be freed.
  */
-void xcb_get_wm_protocols_reply_wipe(xcb_get_wm_protocols_reply_t *protocols);
+void xcb_icccm_get_wm_protocols_reply_wipe(xcb_icccm_get_wm_protocols_reply_t *protocols);
 
 #ifdef __cplusplus
 }
