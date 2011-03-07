@@ -1144,13 +1144,22 @@ uint8_t
 xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
                                 xcb_get_property_reply_t *r)
 {
+  const uint32_t r_value_len = xcb_get_property_value_length(r);
   if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||
-     xcb_get_property_value_length(r) <= (sizeof(uint32_t) * 2))
+     r_value_len <= (sizeof(uint32_t) * 2))
+    return 0;
+
+  uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
+  if(!r_value)
+    return 0;
+
+  /* Check that the property is as long as it should be, handling
+     integer overflow */
+  const uint64_t expected_len = r_value[0] * (uint64_t) r_value[1];
+  if(!r_value[0] || !r_value[1] || expected_len > r_value_len - 2)
     return 0;
 
   wm_icon->_reply = r;
-  uint32_t *r_value = (uint32_t *) xcb_get_property_value(wm_icon->_reply);
-
   wm_icon->width = r_value[0];
   wm_icon->height = r_value[1];
   wm_icon->data = r_value + 2;
