@@ -1146,21 +1146,31 @@ xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
 {
   if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32)
     return 0;
+
   uint32_t r_value_len = xcb_get_property_value_length(r);
   uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
-  if(r_value_len <= (sizeof(uint32_t) * 2) || !r_value)
-    return 0;
 
-  /* Check that the property is as long as it should be, handling
-     integer overflow. "-2" to handle the width and height fields. */
-  const uint64_t expected_len = r_value[0] * (uint64_t) r_value[1];
-  if(!r_value[0] || !r_value[1] || expected_len > r_value_len / 4 - 2)
+  /* Find the number of icons in the reply. */
+  while(r_value_len > (sizeof(uint32_t) * 2) && r_value && r_value[0] && r_value[1])
+  {
+    /* Check that the property is as long as it should be (in bytes),
+       handling integer overflow. "+2" to handle the width and height
+       fields. */
+    const uint64_t expected_len = (r_value[0] * (uint64_t) r_value[1] + 2) * 4;
+    if(expected_len > r_value_len)
+      break;
+
+    wm_icon->num_icons++;
+
+    /* Find pointer to next icon in the reply. */
+    r_value_len -= expected_len;
+    r_value = (uint32_t *) (((uint8_t *) r_value) + expected_len);
+  }
+
+  if(!wm_icon->num_icons)
     return 0;
 
   wm_icon->_reply = r;
-  wm_icon->width = r_value[0];
-  wm_icon->height = r_value[1];
-  wm_icon->data = r_value + 2;
 
   return 1;
 }
@@ -1183,6 +1193,55 @@ void
 xcb_ewmh_get_wm_icon_reply_wipe(xcb_ewmh_get_wm_icon_reply_t *wm_icon)
 {
   free(wm_icon->_reply);
+}
+
+xcb_ewmh_wm_icon_iterator_t
+xcb_ewmh_get_wm_icon_iterator(const xcb_ewmh_get_wm_icon_reply_t *wm_icon)
+{
+  xcb_ewmh_wm_icon_iterator_t ret;
+
+  ret.width = 0;
+  ret.height = 0;
+  ret.data = NULL;
+  ret.rem = wm_icon->num_icons;
+  ret.index = 0;
+
+  if(ret.rem > 0)
+  {
+    uint32_t *r_value = (uint32_t *) xcb_get_property_value(wm_icon->_reply);
+    ret.width = r_value[0];
+    ret.height = r_value[1];
+    ret.data = &r_value[2];
+  }
+
+  return ret;
+}
+
+unsigned int xcb_ewmh_get_wm_icon_length(const xcb_ewmh_get_wm_icon_reply_t *wm_icon)
+{
+  return wm_icon->num_icons;
+}
+
+void xcb_ewmh_get_wm_icon_next(xcb_ewmh_wm_icon_iterator_t *iterator)
+{
+  if(iterator->rem <= 1)
+  {
+    iterator->index += iterator->rem;
+    iterator->rem = 0;
+    iterator->width = 0;
+    iterator->height = 0;
+    iterator->data = NULL;
+    return;
+  }
+
+  uint64_t icon_len = iterator->width * (uint64_t) iterator->height;
+  uint32_t *data = iterator->data + icon_len;
+
+  iterator->rem--;
+  iterator->index++;
+  iterator->width = data[0];
+  iterator->height = data[1];
+  iterator->data = &data[2];
 }
 
 /**

@@ -295,7 +295,7 @@ typedef struct {
 } xcb_ewmh_wm_strut_partial_t;
 
 /**
- * @brief Hold reply of _NET_WM_ICON GetProperty
+ * @brief Hold a single icon from reply of _NET_WM_ICON GetProperty
  */
 typedef struct {
   /** Icon width */
@@ -304,6 +304,18 @@ typedef struct {
   uint32_t height;
   /** Rows, left to right and top to bottom of the CARDINAL ARGB */
   uint32_t *data;
+  /** Number of icons remaining */
+  unsigned int rem;
+  /** Index of the current icon in the array of icons */
+  unsigned int index;
+} xcb_ewmh_wm_icon_iterator_t;
+
+/**
+ * @brief Hold reply of _NET_WM_ICON GetProperty
+ */
+typedef struct {
+  /** Number of icons */
+  unsigned int num_icons;
   /** The actual GetProperty reply */
   xcb_get_property_reply_t *_reply;
 } xcb_ewmh_get_wm_icon_reply_t;
@@ -2022,6 +2034,12 @@ uint8_t xcb_ewmh_get_wm_icon_reply(xcb_ewmh_connection_t *ewmh,
                                    xcb_get_property_cookie_t cookie,
                                    xcb_ewmh_get_wm_icon_reply_t *wm_icon,
                                    xcb_generic_error_t **e);
+
+xcb_ewmh_wm_icon_iterator_t xcb_ewmh_get_wm_icon_iterator(const xcb_ewmh_get_wm_icon_reply_t *wm_icon);
+
+unsigned int xcb_ewmh_get_wm_icon_length(const xcb_ewmh_get_wm_icon_reply_t *wm_icon);
+
+void xcb_ewmh_get_wm_icon_next(xcb_ewmh_wm_icon_iterator_t *iterator);
 
 void xcb_ewmh_get_wm_icon_reply_wipe(xcb_ewmh_get_wm_icon_reply_t *wm_icon);
 
