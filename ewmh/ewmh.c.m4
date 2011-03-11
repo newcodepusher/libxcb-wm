@@ -1144,13 +1144,11 @@ uint8_t
 xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
                                 xcb_get_property_reply_t *r)
 {
-  const uint32_t r_value_len = xcb_get_property_value_length(r);
-  if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32 ||
-     r_value_len <= (sizeof(uint32_t) * 2))
+  if(!r || r->type != XCB_ATOM_CARDINAL || r->format != 32)
     return 0;
-
+  uint32_t r_value_len = xcb_get_property_value_length(r);
   uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
-  if(!r_value)
+  if(r_value_len <= (sizeof(uint32_t) * 2) || !r_value)
     return 0;
 
   /* Check that the property is as long as it should be, handling
