@@ -1154,9 +1154,9 @@ xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
     return 0;
 
   /* Check that the property is as long as it should be, handling
-     integer overflow */
+     integer overflow. "-2" to handle the width and height fields. */
   const uint64_t expected_len = r_value[0] * (uint64_t) r_value[1];
-  if(!r_value[0] || !r_value[1] || expected_len > r_value_len - 2)
+  if(!r_value[0] || !r_value[1] || expected_len > r_value_len / 4 - 2)
     return 0;
 
   wm_icon->_reply = r;
