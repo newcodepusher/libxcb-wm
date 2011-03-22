@@ -10,7 +10,7 @@ AM_CFLAGS = $(CWARNFLAGS)
 libxcb_icccm_la_SOURCES = icccm.c
 libxcb_icccm_la_CPPFLAGS = $(XCB_CFLAGS) $(XPROTO_CFLAGS)
 libxcb_icccm_la_LIBADD = $(XCB_LIBS) $(XPROTO_LIBS)
-libxcb_icccm_la_LDFLAGS = -version-info 4:0:0
+libxcb_icccm_la_LDFLAGS = -version-info 4:0:0 -no-undefined
 
 pkgconfig_DATA = xcb-icccm.pc
 
