@@ -1151,6 +1151,7 @@ xcb_ewmh_get_wm_icon_from_reply(xcb_ewmh_get_wm_icon_reply_t *wm_icon,
   uint32_t *r_value = (uint32_t *) xcb_get_property_value(r);
 
   /* Find the number of icons in the reply. */
+  wm_icon->num_icons = 0;
   while(r_value_len > (sizeof(uint32_t) * 2) && r_value && r_value[0] && r_value[1])
   {
     /* Check that the property is as long as it should be (in bytes),
