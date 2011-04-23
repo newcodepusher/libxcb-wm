@@ -2011,15 +2011,58 @@ uint8_t xcb_ewmh_get_wm_icon_geometry_reply(xcb_ewmh_connection_t *ewmh,
                                             xcb_ewmh_geometry_t *icons,
                                             xcb_generic_error_t **e);
 
-xcb_void_cookie_t xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
-                                               xcb_window_t window,
-                                               uint32_t width, uint32_t height,
-                                               uint32_t img_len, uint32_t *img);
+/**
+ * @brief Send ChangeProperty request to set _NET_WM_ICON window
+ *        property. The given data is considered to be already
+ *        prepared, namely that it is an array such as: WIDTH1,
+ *        HEIGHT1, IMG1, WIDTH2, HEIGHT2, IMG2.
+ *
+ *        If you only want to add or append a single icon, you may
+ *        consider using xcb_ewmh_append_wm_icon_checked which is far
+ *        easier to use.
+ *
+ * _NET_WM_ICON CARDINAL[][2+n]/32
+ *
+ * @param ewmh The information relative to EWMH
+ * @param mode ChangeProperty mode (xcb_prop_mode_t)
+ * @param window The window to set the property on
+ * @param data_len Length of the data
+ * @param data The data
+ */
+static inline xcb_void_cookie_t
+xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
+                             uint8_t mode,
+                             xcb_window_t window,
+                             uint32_t data_len, uint32_t *data)
+{
+  return xcb_change_property_checked(ewmh->connection, mode,
+                                     window, ewmh->_NET_WM_ICON,
+                                     XCB_ATOM_CARDINAL, 32, data_len, data);
+}
 
-xcb_void_cookie_t xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
-                                       xcb_window_t window,
-                                       uint32_t width, uint32_t height,
-                                       uint32_t img_len, uint32_t *img);
+/**
+ * @see xcb_ewmh_set_wm_icon_checked
+ */
+static inline xcb_void_cookie_t
+xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
+                     uint8_t mode,
+                     xcb_window_t window,
+                     uint32_t data_len, uint32_t *data)
+{
+  return xcb_change_property(ewmh->connection, mode, window,
+                             ewmh->_NET_WM_ICON, XCB_ATOM_CARDINAL, 32,
+                             data_len, data);
+}
+
+xcb_void_cookie_t xcb_ewmh_append_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
+                                                  xcb_window_t window,
+                                                  uint32_t width, uint32_t height,
+                                                  uint32_t img_len, uint32_t *img);
+
+xcb_void_cookie_t xcb_ewmh_append_wm_icon(xcb_ewmh_connection_t *ewmh,
+                                          xcb_window_t window,
+                                          uint32_t width, uint32_t height,
+                                          uint32_t img_len, uint32_t *img);
 
 xcb_get_property_cookie_t xcb_ewmh_get_wm_icon_unchecked(xcb_ewmh_connection_t *ewmh,
                                                          xcb_window_t window);

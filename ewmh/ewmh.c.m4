@@ -1107,35 +1107,33 @@ set_wm_icon_data(uint32_t data[], uint32_t width, uint32_t height,
 }
 
 xcb_void_cookie_t
-xcb_ewmh_set_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
-                             xcb_window_t window,
-                             uint32_t width, uint32_t height,
-                             uint32_t img_len, uint32_t *img)
+xcb_ewmh_append_wm_icon_checked(xcb_ewmh_connection_t *ewmh,
+                                xcb_window_t window,
+                                uint32_t width, uint32_t height,
+                                uint32_t img_len, uint32_t *img)
 {
   const uint32_t data_len = img_len + 2;
   uint32_t data[data_len];
 
   set_wm_icon_data(data, width, height, img_len, img);
 
-  return xcb_change_property_checked(ewmh->connection, XCB_PROP_MODE_REPLACE,
-                                     window, ewmh->_NET_WM_ICON,
-                                     XCB_ATOM_CARDINAL, 32, data_len, data);
+  return xcb_ewmh_set_wm_icon_checked(ewmh, XCB_PROP_MODE_APPEND, window,
+                                      data_len, data);
 }
 
 xcb_void_cookie_t
-xcb_ewmh_set_wm_icon(xcb_ewmh_connection_t *ewmh,
-                     xcb_window_t window,
-                     uint32_t width, uint32_t height,
-                     uint32_t img_len, uint32_t *img)
+xcb_ewmh_append_wm_icon(xcb_ewmh_connection_t *ewmh,
+                        xcb_window_t window,
+                        uint32_t width, uint32_t height,
+                        uint32_t img_len, uint32_t *img)
 {
   const uint32_t data_len = img_len + 2;
   uint32_t data[data_len];
 
   set_wm_icon_data(data, width, height, img_len, img);
 
-  return xcb_change_property(ewmh->connection, XCB_PROP_MODE_REPLACE, window,
-                             ewmh->_NET_WM_ICON, XCB_ATOM_CARDINAL, 32,
-                             data_len, data);
+  return xcb_ewmh_set_wm_icon(ewmh, XCB_PROP_MODE_APPEND, window,
+                              data_len, data);
 }
 
 DO_GET_PROPERTY(wm_icon, _NET_WM_ICON, XCB_ATOM_CARDINAL, UINT_MAX)
