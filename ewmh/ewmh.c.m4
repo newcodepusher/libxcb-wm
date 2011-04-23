@@ -1,5 +1,5 @@
 /*
- * Copyright © 2009 Arnaud Fontaine <arnau@mini-dweeb.org>
+ * Copyright © 2009-2011 Arnaud Fontaine <arnau@debian.org>
  *
  * Permission  is  hereby  granted,  free  of charge,  to  any  person
  * obtaining  a copy  of  this software  and associated  documentation
@@ -545,8 +545,8 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
   /* First, send InternAtom request for all Atoms except _NET_WM_CM_Sn */
   for(atom_nbr = 0; atom_nbr < NB_EWMH_ATOMS; atom_nbr++)
     ewmh_cookies[atom_nbr] = xcb_intern_atom(ewmh->connection, 0,
-					     ewmh_atoms[atom_nbr].name_len,
-					     ewmh_atoms[atom_nbr].name);
+                                             ewmh_atoms[atom_nbr].name_len,
+                                             ewmh_atoms[atom_nbr].name);
 
   /* Then,  send  InternAtom requests  for  _NET_WM_CM_Sn and  compute
      _NET_WM_CM_Sn according to the screen number 'n' */
@@ -555,13 +555,13 @@ xcb_ewmh_init_atoms(xcb_connection_t *c,
       char wm_cm_sn[32];
 
       const int wm_cm_sn_len = snprintf(wm_cm_sn, 32, "_NET_WM_CM_S%d",
-					screen_nbr);
+                                        screen_nbr);
 
       assert(wm_cm_sn_len > 0 && wm_cm_sn_len < 32);
 
       ewmh_cookies[atom_nbr++] = xcb_intern_atom(ewmh->connection, 0,
-						 wm_cm_sn_len,
-						 wm_cm_sn);
+                                                 wm_cm_sn_len,
+                                                 wm_cm_sn);
     }
 
   return ewmh_cookies;
@@ -580,15 +580,15 @@ xcb_ewmh_init_atoms_replies(xcb_ewmh_connection_t *ewmh,
   for(atom_nbr = 0; atom_nbr < NB_EWMH_ATOMS + ewmh->nb_screens; atom_nbr++)
     if((reply = xcb_intern_atom_reply(ewmh->connection, ewmh_cookies[atom_nbr], e)))
       {
-	if(ret)
-	  {
-	    if(atom_nbr < NB_EWMH_ATOMS)
-	      *((xcb_atom_t *) (((char *) ewmh) + ewmh_atoms[atom_nbr].m_offset)) = reply->atom;
-	    else
-	      ewmh->_NET_WM_CM_Sn[screen_nbr++] = reply->atom;
-	  }
+        if(ret)
+          {
+            if(atom_nbr < NB_EWMH_ATOMS)
+              *((xcb_atom_t *) (((char *) ewmh) + ewmh_atoms[atom_nbr].m_offset)) = reply->atom;
+            else
+              ewmh->_NET_WM_CM_Sn[screen_nbr++] = reply->atom;
+          }
 
-	free(reply);
+        free(reply);
       }
     else
       ret = 0;

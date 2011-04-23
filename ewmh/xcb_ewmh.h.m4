@@ -2,7 +2,7 @@
 #define __XCB_EWMH_H__
 
 /*
- * Copyright (C) 2009 Arnaud Fontaine <arnau@mini-dweeb.org>
+ * Copyright (C) 2009-2011 Arnaud Fontaine <arnau@debian.org>
  *
  * Permission  is  hereby  granted,  free  of charge,  to  any  person
  * obtaining  a copy  of  this software  and associated  documentation
@@ -864,7 +864,7 @@ xcb_ewmh_get_number_of_desktops_reply(xcb_ewmh_connection_t *ewmh,
 
 static inline xcb_void_cookie_t
 xcb_ewmh_request_change_number_of_desktops(xcb_ewmh_connection_t *ewmh,
-					   int screen_nbr,
+                                           int screen_nbr,
                                            uint32_t new_number_of_desktops)
 {
   return xcb_ewmh_send_client_message(ewmh->connection, XCB_NONE,
@@ -1684,11 +1684,11 @@ xcb_void_cookie_t xcb_ewmh_request_restack_window(xcb_ewmh_connection_t *ewmh,
 
 static inline xcb_void_cookie_t
 xcb_ewmh_request_frame_extents(xcb_ewmh_connection_t *ewmh,
-			       int screen_nbr,
+                               int screen_nbr,
                                xcb_window_t client_window)
 {
   return xcb_ewmh_send_client_message(ewmh->connection, client_window,
-				      ewmh->screens[screen_nbr]->root,
+                                      ewmh->screens[screen_nbr]->root,
                                       ewmh->_NET_REQUEST_FRAME_EXTENTS, 0, NULL);
 }
 
