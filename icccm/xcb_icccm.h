@@ -386,13 +386,13 @@ uint8_t xcb_icccm_get_wm_client_machine_reply(xcb_connection_t *c,
  * @param c The connection to the X server.
  * @param window Window X identifier.
  * @param class_len Length of WM_CLASS string.
- * @param class WM_CLASS string.
+ * @param class_name WM_CLASS string.
  * @return The request cookie.
  */
 xcb_void_cookie_t xcb_icccm_set_wm_class_checked(xcb_connection_t *c,
                                                    xcb_window_t window,
                                                    uint32_t class_len,
-                                                   const char *class);
+                                                   const char *class_name);
 
 /**
  * @see xcb_icccm_set_wm_class_checked()
@@ -400,7 +400,7 @@ xcb_void_cookie_t xcb_icccm_set_wm_class_checked(xcb_connection_t *c,
 xcb_void_cookie_t xcb_icccm_set_wm_class(xcb_connection_t *c,
                                            xcb_window_t window,
                                            uint32_t class_len,
-                                           const char *class);
+                                           const char *class_name);
 
 typedef struct {
 /** Instance name */
