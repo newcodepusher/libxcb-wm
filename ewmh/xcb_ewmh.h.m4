@@ -1427,20 +1427,20 @@ void xcb_ewmh_get_workarea_reply_wipe(xcb_ewmh_get_workarea_reply_t *r);
  * _NET_SUPPORTING_WM_CHECK, WINDOW/32
  *
  * @param ewmh The per-screen EWMH information
- * @param screen_nbr The screen number
- * @param new_window The child window created by the WM
+ * @param parent_window The root window or child window created by the WM
+ * @param child_window The child window created by the WM
  * @return Cookie associated with the ChangeProperty _NET_SUPPORTING_WM_CHECK request
  */
 xcb_void_cookie_t xcb_ewmh_set_supporting_wm_check(xcb_ewmh_connection_t *ewmh,
-                                                   int screen_nbr,
-                                                   xcb_window_t new_window);
+                                                   xcb_window_t parent_window,
+                                                   xcb_window_t child_window);
 
 /**
  * @see xcb_ewmh_set_supporting_wm_check
  */
 xcb_void_cookie_t xcb_ewmh_set_supporting_wm_check_checked(xcb_ewmh_connection_t *ewmh,
-                                                           int screen_nbr,
-                                                           xcb_window_t new_window);
+                                                           xcb_window_t parent_window,
+                                                           xcb_window_t child_window);
 
 /**
  * @brief  Send GetProperty  request  to get  _NET_SUPPORTING_WM_CHECK
@@ -1451,13 +1451,13 @@ xcb_void_cookie_t xcb_ewmh_set_supporting_wm_check_checked(xcb_ewmh_connection_t
  * @return The _NET_SUPPORTING_WM_CHECK cookie of the GetProperty request
  */
 xcb_get_property_cookie_t xcb_ewmh_get_supporting_wm_check_unchecked(xcb_ewmh_connection_t *ewmh,
-                                                                     int screen_nbr);
+                                                                     xcb_window_t window);
 
 /**
  * @see xcb_ewmh_get_supporting_wm_check_unchecked
  */
 xcb_get_property_cookie_t xcb_ewmh_get_supporting_wm_check(xcb_ewmh_connection_t *ewmh,
-                                                           int screen_nbr);
+                                                           xcb_window_t window);
 
 /**
  * @brief  Get   the  list  of  client  windows   from  a  GetProperty

@@ -780,8 +780,8 @@ DO_REPLY_LIST_VALUES(workarea, XCB_ATOM_CARDINAL, xcb_ewmh_geometry_t)
  * _NET_SUPPORTING_WM_CHECK
  */
 
-DO_ROOT_SINGLE_VALUE(supporting_wm_check, _NET_SUPPORTING_WM_CHECK,
-                     XCB_ATOM_WINDOW, xcb_window_t)
+DO_SINGLE_VALUE(supporting_wm_check, _NET_SUPPORTING_WM_CHECK,
+                XCB_ATOM_WINDOW, xcb_window_t)
 
 /**
  * _NET_VIRTUAL_ROOTS
