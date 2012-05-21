@@ -13,3 +13,4 @@ ChangeLog:
 dist-hook: ChangeLog INSTALL
 
 SUBDIRS = icccm ewmh
+EXTRA_DIST = autogen.sh
