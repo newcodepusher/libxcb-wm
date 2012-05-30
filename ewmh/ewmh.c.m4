@@ -53,7 +53,7 @@ typedef struct {
   /** The Atom name length */
   uint8_t name_len;
   /** The Atom name string */
-  char *name;
+  const char *name;
   size_t m_offset;
 } ewmh_atom_t;
 
