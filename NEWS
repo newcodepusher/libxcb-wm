@@ -1,3 +1,9 @@
+Release 0.3.9 (2012-05-30)
+==========================
+
+- Replacing c++ class keyword in interface header.
+- Fix incomplete implementation of _NET_SUPPORTING_WM_CHECK.
+
 Release 0.3.8 (2010-04-25)
 ==========================
 
