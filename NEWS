@@ -1,3 +1,8 @@
+Release 0.4.0 (2014-01-19)
+==========================
+
+- Set EWMH ClientMessage window to the Root, not mandated but expected by some WMs.
+
 Release 0.3.9 (2012-05-30)
 ==========================
 
@@ -17,4 +22,4 @@ Release 0.3.8 (2010-04-25)
 - Link with -no-undefined.
 - Validate size of wm_hints and wm_size_hints.
 - Ensure get_wm_class_from_reply returns a valid C-string.
-- Add AM_MAINTAINER_MODE for vendors
+- Add AM_MAINTAINER_MODE for vendors.
