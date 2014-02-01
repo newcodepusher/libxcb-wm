@@ -11,8 +11,10 @@ AC_TYPE_SSIZE_T
 XCB_UTIL_M4_WITH_INCLUDE_PATH
 XCB_UTIL_COMMON([1.4], [1.6])
 
-AC_OUTPUT([Makefile
-	icccm/Makefile icccm/xcb-icccm.pc
-	ewmh/Makefile ewmh/xcb-ewmh.pc
-	xcb_util_intro
-	])
+AC_CONFIG_FILES([Makefile
+	icccm/Makefile
+	icccm/xcb-icccm.pc
+	ewmh/Makefile
+	ewmh/xcb-ewmh.pc
+	xcb_util_intro])
+AC_OUTPUT
