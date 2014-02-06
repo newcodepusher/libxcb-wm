@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libxcb-ewmh.la
 
 nodist_xcbinclude_HEADERS = xcb_ewmh.h
 
-AM_CFLAGS = $(CWARNFLAGS)
+AM_CFLAGS = $(BASE_CFLAGS)
 AM_CPPFLAGS = $(XCB_CFLAGS)
 
 libxcb_ewmh_la_SOURCES = ewmh.c.m4 atomlist.m4 xcb_ewmh.h.m4

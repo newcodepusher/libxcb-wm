@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libxcb-icccm.la
 
 xcbinclude_HEADERS = xcb_icccm.h
 
-AM_CFLAGS = $(CWARNFLAGS)
+AM_CFLAGS = $(BASE_CFLAGS)
 AM_CPPFLAGS = $(XCB_CFLAGS)
 
 libxcb_icccm_la_SOURCES = icccm.c
