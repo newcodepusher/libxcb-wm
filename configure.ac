@@ -16,6 +16,5 @@ AC_CONFIG_FILES([Makefile
 	icccm/Makefile
 	icccm/xcb-icccm.pc
 	ewmh/Makefile
-	ewmh/xcb-ewmh.pc
-	xcb_util_intro])
+	ewmh/xcb-ewmh.pc])
 AC_OUTPUT

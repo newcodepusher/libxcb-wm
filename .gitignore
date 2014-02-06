@@ -76,6 +76,5 @@ core
 #		Edit the following section as needed
 # For example, !report.pc overrides *.pc. See 'man gitignore'
 #
-xcb_util_intro
 ewmh/ewmh.c
 ewmh/xcb_ewmh.h
