@@ -1,6 +1,4 @@
 
-MAINTAINERCLEANFILES = Makefile.in
-
 lib_LTLIBRARIES = libxcb-icccm.la
 
 xcbinclude_HEADERS = xcb_icccm.h
