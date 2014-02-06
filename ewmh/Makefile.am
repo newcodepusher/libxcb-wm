@@ -8,8 +8,8 @@ AM_CFLAGS = $(CWARNFLAGS)
 
 libxcb_ewmh_la_SOURCES = ewmh.c.m4 atomlist.m4 xcb_ewmh.h.m4
 nodist_libxcb_ewmh_la_SOURCES = ewmh.c
-libxcb_ewmh_la_CPPFLAGS = $(XCB_CFLAGS) $(XPROTO_CFLAGS)
-libxcb_ewmh_la_LIBADD = $(XCB_LIBS) $(XPROTO_LIBS)
+libxcb_ewmh_la_CPPFLAGS = $(XCB_CFLAGS)
+libxcb_ewmh_la_LIBADD = $(XCB_LIBS)
 libxcb_ewmh_la_LDFLAGS = -version-info 2:0:0 -no-undefined
 
 pkgconfig_DATA = xcb-ewmh.pc
