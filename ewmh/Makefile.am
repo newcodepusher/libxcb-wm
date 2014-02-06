@@ -13,8 +13,6 @@ libxcb_ewmh_la_LDFLAGS = -version-info 2:0:0 -no-undefined
 
 pkgconfig_DATA = xcb-ewmh.pc
 
-EXTRA_DIST = xcb-ewmh.pc.in
-
 BUILT_SOURCES = ewmh.c xcb_ewmh.h
 CLEANFILES = $(BUILT_SOURCES)
 
