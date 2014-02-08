@@ -17,7 +17,7 @@ BUILT_SOURCES = ewmh.c xcb_ewmh.h
 CLEANFILES = $(BUILT_SOURCES)
 
 ewmh.c: ewmh.c.m4 atomlist.m4
-	$(M4) -I$(srcdir) $< >$@
+	$(AM_V_GEN)$(M4) -I$(srcdir) $< >$@
 
 xcb_ewmh.h: xcb_ewmh.h.m4 atomlist.m4
-	$(M4) -I$(srcdir) $< >$@
+	$(AM_V_GEN)$(M4) -I$(srcdir) $< >$@
