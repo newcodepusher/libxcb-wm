@@ -1,3 +1,14 @@
+Release 0.4.1 (2014-02-19)
+==========================
+
+- xcb-proto should have never been required as xcb provides the Atoms.
+- Do not distribute ewmh C source file as they are generated with M4.
+- config: replace deprecated use of AC_OUTPUT with AC_CONFIG_FILES.
+- config: use AC_CONFIG_HEADERS to create a config.h file.
+- make: implement the silent rules for m4 generated files.
+- make: compile the library with standard xorg warning flags.
+  - Bump required xorg-macros version to >= 1.16.0.
+  
 Release 0.4.0 (2014-01-19)
 ==========================
 
